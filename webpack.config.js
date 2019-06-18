@@ -11,11 +11,18 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx"]
   },
+  devServer: {
+    historyApiFallback: true
+  },
   module: {
     rules: [
       {
         test: /\.jsx?/,
         loader: "babel-loader"
+      },
+      {
+        test: /\.css?/,
+        loader: "css-loader"
       },
       {
         test: /\.less?/,
