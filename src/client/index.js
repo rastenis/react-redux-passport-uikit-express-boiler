@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
 import Main from "./components/layout";
+
+import "uikit/dist/js/uikit-core.min.js";
+import "uikit/dist/css/uikit.min.css";
 
 ReactDOM.render(<Main />, document.getElementById("root"));

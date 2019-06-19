@@ -21,18 +21,8 @@ module.exports = {
         loader: "babel-loader"
       },
       {
-        test: /\.css?/,
-        loader: "css-loader"
-      },
-      {
-        test: /\.less?/,
-        issuer: /\.less$/,
-        include: [path.resolve(__dirname, "node_modules", "uikit")],
-        use: [
-          { loader: "style-loader" },
-          { loader: "css-loader" },
-          { loader: "less-loader" }
-        ]
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"]
       }
     ]
   }
