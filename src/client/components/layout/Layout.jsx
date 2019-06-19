@@ -11,7 +11,7 @@ export default function Layout() {
         <Navigation />
         <div className="uk-container uk-width-1-3 uk-margin-medium-top">
           <Route exact path="/" component={Dashboard} />
-          <Route exact path="/login" component={Login} />
+          <Route path="/login" component={Login} />
         </div>
       </Router>
     </div>

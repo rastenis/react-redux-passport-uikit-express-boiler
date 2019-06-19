@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 export default function Navigation() {
   return (
@@ -11,10 +11,22 @@ export default function Navigation() {
           </li>
           <li className="uk-margin-large-right" />
           <li>
-            <Link to="/">Dashboard</Link>
+            <NavLink
+              exact
+              activeStyle={{ className: "uk-active", color: "black" }}
+              to="/"
+            >
+              Dashboard
+            </NavLink>
           </li>
-          <li className="uk-active">
-            <Link to="/login">Login</Link>
+          <li>
+            <NavLink
+              exact
+              activeStyle={{ className: "uk-active", color: "black" }}
+              to="/login"
+            >
+              Login
+            </NavLink>
           </li>
         </ul>
       </div>
