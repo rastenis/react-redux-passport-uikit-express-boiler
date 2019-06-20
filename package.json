@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack -p",
-    "dev": "webpack-dev-server"
+    "dev": "webpack-dev-server",
+    "dev-server": "nodemon src/server --exec babel-node src/server"
   },
   "author": "Scharkee",
   "repository": {
@@ -17,7 +18,9 @@
   "dependencies": {
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
+    "helmet": "^3.18.0",
     "mongoose": "^5.6.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
