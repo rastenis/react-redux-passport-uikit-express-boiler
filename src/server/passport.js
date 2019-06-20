@@ -1,5 +1,5 @@
-import passport from "passport"
-import { Strategy: LocalStrategy } from "passport-local";
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
 
 import db from "./db";
 import keysConf from "../../config/key.json";
