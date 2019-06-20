@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
+import bcrypt from "bcrypt";
+import to from "await-to-js";
 
 import bodyParser from "body-parser";
 import db from "./db";
@@ -21,5 +23,22 @@ if (process.env.NODE_ENV == `production`) {
     res.sendFile(path.resolve("index.html"));
   });
 }
+
+app.post("/auth", async (req, res) => {
+  console.log(`LOGIN | requester: ${req.body.email}`, 0);
+
+  let [err] = await req.logIn(user);
+
+  if (err) {
+    console.error(err);
+  }
+
+  return res.json({
+    meta: {
+      error: false
+    },
+    user: user
+  });
+});
 
 app.listen(port, console.log("Server listening on port ", port));
