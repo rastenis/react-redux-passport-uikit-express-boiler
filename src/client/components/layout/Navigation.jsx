@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 
-export default function Navigation() {
+export function Navigation() {
   return (
     <nav className="uk-navbar-container" uk-navbar="true">
       <div className="uk-navbar-left">

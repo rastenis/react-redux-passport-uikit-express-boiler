@@ -1,10 +1,9 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import bcrypt from "bcrypt";
 import to from "await-to-js";
-
 import bodyParser from "body-parser";
+
 import db from "./db";
 
 import config from "../../config/config.json";
@@ -27,18 +26,27 @@ if (process.env.NODE_ENV == `production`) {
 app.post("/auth", async (req, res) => {
   console.log(`LOGIN | requester: ${req.body.email}`, 0);
 
-  let [err] = await req.logIn(user);
+  let [err, user] = await to(passport.authenticate("local"));
 
   if (err) {
     console.error(err);
+
+    return res.status(500).send("Authentication error!");
+  }
+  if (!user) {
+    // all failed logins default to the same error message
+    console.log("wrrooong");
+    return res.status(401).send("Wrong credentials!");
   }
 
-  return res.json({
-    meta: {
-      error: false
-    },
-    user: user
-  });
+  [err] = await to(req.logIn(user));
+
+  if (err) {
+    console.error(err);
+    return res.status(500).send("Authentication error!");
+  }
+
+  return res.send("You have successfully logged in!");
 });
 
 app.listen(port, console.log("Server listening on port ", port));

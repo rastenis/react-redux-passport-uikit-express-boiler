@@ -37,12 +37,7 @@ passport.use(
       }
 
       if (!user) {
-        return done(
-          {
-            msg: `Email ${email} not found.`
-          },
-          false
-        );
+        return done(`Email ${email} not found.`);
       }
 
       user = new User(user);
@@ -52,23 +47,15 @@ passport.use(
         return done(err);
       }
 
-      if (isMatch) {
+      if (matched) {
         return done(null, user);
       }
 
-      return done(
-        {
-          msg: "Invalid credentials."
-        },
-        false
-      );
+      return done("Invalid credentials.");
     }
   )
 );
 
-/*
- * Login Required middleware.
- */
 exports.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
@@ -76,9 +63,6 @@ exports.isAuthenticated = (req, res, next) => {
   res.redirect("/login");
 };
 
-/*
- * Authorization Required middleware.
- */
 exports.isAuthorized = (req, res, next) => {
   const provider = req.path.split("/").slice(-1)[0];
   const token = req.user.data.tokens.find(token => token.kind === provider);

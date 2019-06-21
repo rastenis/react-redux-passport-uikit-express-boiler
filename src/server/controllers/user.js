@@ -171,7 +171,7 @@ class User {
     let [err, matched] = await to(
       bcrypt.compare(candidatePassword, this.data.password)
     );
-    cb(err, isMatch);
+    cb(err, matched);
   }
 
   isModified(field) {
