@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import * as mutations from "../store/mutations";
 import { connect } from "react-redux";
 
-export class Login extends Component {
+class Login extends Component {
   constructor(...args) {
     super(...args);
 
@@ -13,14 +13,18 @@ export class Login extends Component {
   }
 
   onChange = e => {
-    this.setState({ [e.target.name]: [e.target.value] });
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  submitLogin = () => {
+    this.props.authenticateUser(this.state.email, this.state.password);
   };
 
   render() {
     return (
       <div>
         <h1 className="uk-header-medium uk-text-center">Login</h1>
-        <form className="uk-form-stacked" onSubmit={authenticateUser}>
+        <form className="uk-form-stacked">
           <div className="uk-margin">
             {this.props.authenticated === mutations.AUTH_ERROR ? (
               <p>Bad credentials!</p>
@@ -54,7 +58,13 @@ export class Login extends Component {
               />
             </div>
             <div className="uk-form-controls uk-margin-small-bottom">
-              <button className="uk-button uk-button-primary">Submit</button>
+              <button
+                type="button"
+                className="uk-button uk-button-primary"
+                onClick={this.submitLogin}
+              >
+                Submit
+              </button>
             </div>
           </div>
         </form>
@@ -63,10 +73,9 @@ export class Login extends Component {
   }
 }
 
-const authenticateUser = e => {
-  e.preventDefault();
-  console.log(e.target.email.value, e.target.password.value);
-  return mutations.requestAuth(e.target.email.value, e.target.password.value);
+const authenticateUser = (e, p) => {
+  console.log(e, p);
+  return mutations.requestAuth(e, p);
 };
 
 const mapStateToProps = ({ session }) => ({

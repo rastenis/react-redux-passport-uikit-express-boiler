@@ -1,8 +1,9 @@
 const path = require("path");
-
+const config = require("./config/config.json");
 module.exports = {
   mode: "development",
   entry: path.resolve(__dirname, "src", "client"),
+
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
@@ -12,7 +13,13 @@ module.exports = {
     extensions: [".js", ".jsx"]
   },
   devServer: {
-    historyApiFallback: true
+    historyApiFallback: true,
+    proxy: {
+      "/api": {
+        target: `http://localhost:${config.port}`,
+        secure: false
+      }
+    }
   },
   module: {
     rules: [

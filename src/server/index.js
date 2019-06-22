@@ -1,10 +1,15 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
+import passport from "passport";
+import passportConfig, {
+  _promisifiedPassportAuthentication
+} from "./passport.js";
+
+import path from "path";
+
 import to from "await-to-js";
 import bodyParser from "body-parser";
-
-import db from "./db";
 
 import config from "../../config/config.json";
 
@@ -15,6 +20,8 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(helmet());
+app.use(passport.initialize());
+app.use(passport.session());
 
 if (process.env.NODE_ENV == `production`) {
   app.use(express.static(path.resolve(__dirname, "../../dist")));
@@ -23,10 +30,14 @@ if (process.env.NODE_ENV == `production`) {
   });
 }
 
-app.post("/auth", async (req, res) => {
-  console.log(`LOGIN | requester: ${req.body.email}`, 0);
+app.get("/api/test", (req, res) => {
+  return res.send({ success: true });
+});
 
-  let [err, user] = await to(passport.authenticate("local"));
+app.post("/api/auth", async (req, res) => {
+  console.log(`LOGIN | requester: ${req.body.email}`);
+
+  let [err, user] = await to(_promisifiedPassportAuthentication(req, res));
 
   if (err) {
     console.error(err);
@@ -49,4 +60,4 @@ app.post("/auth", async (req, res) => {
   return res.send("You have successfully logged in!");
 });
 
-app.listen(port, console.log("Server listening on port ", port));
+app.listen(port, console.log(`Server listening on port ${port}`));
