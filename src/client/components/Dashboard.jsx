@@ -7,29 +7,14 @@ class Dashboard extends Component {
     return (
       <div>
         <h1 className="uk-header-medium uk-text-center">Dashboard</h1>
-        {this.props.messages.length
-          ? this.props.messages.map((m, index) => {
-              return (
-                <div
-                  key={index}
-                  class={m.error ? "uk-alert-danger" : "uk-alert-primary"}
-                  uk-alert="true"
-                >
-                  <a class="uk-alert-close" uk-close="true" />
-                  <p>{m.msg}</p>
-                </div>
-              );
-            })
-          : null}
         {this.props.auth ? <p>Loading data...</p> : <p>Log in to view data.</p>}
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ auth, messages }) => ({
-  auth,
-  messages
+const mapStateToProps = ({ auth }) => ({
+  auth
 });
 
 export const ConnectedDashboard = connect(mapStateToProps)(Dashboard);

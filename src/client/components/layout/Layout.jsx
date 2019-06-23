@@ -5,6 +5,8 @@ import { ConnectedRegistration } from "../Registration";
 
 import { ConnectedDashboard } from "../Dashboard";
 import { Navigation } from "./Navigation";
+import { ConnectedMessages } from "./Messages";
+
 import store from "../../store";
 import { history } from "../../store/history";
 
@@ -16,6 +18,7 @@ export default function Layout() {
       <Router history={history}>
         <Provider store={store}>
           <Navigation />
+          <ConnectedMessages />
           <div className="uk-container uk-width-1-3 uk-margin-medium-top">
             <Route exact path="/" component={ConnectedDashboard} />
             <Route path="/login" component={ConnectedLogin} />

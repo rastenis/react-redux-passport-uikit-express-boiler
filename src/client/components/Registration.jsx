@@ -28,20 +28,6 @@ class Registration extends Component {
         <h1 className="uk-header-medium uk-text-center">Register</h1>
         <form className="uk-form-stacked">
           <div className="uk-margin">
-            {this.props.messages.length
-              ? this.props.messages.map((m, index) => {
-                  return (
-                    <div
-                      key={index}
-                      class={m.error ? "uk-alert-danger" : "uk-alert-primary"}
-                      uk-alert="true"
-                    >
-                      <a class="uk-alert-close" uk-close="true" />
-                      <p>{m.msg}</p>
-                    </div>
-                  );
-                })
-              : null}
             <label className="uk-form-label" htmlFor="form-stacked-text">
               Email
             </label>
