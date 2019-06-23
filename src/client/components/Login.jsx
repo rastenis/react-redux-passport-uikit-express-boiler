@@ -21,14 +21,17 @@ class Login extends Component {
   };
 
   render() {
+    console.log(this.props);
     return (
       <div>
         <h1 className="uk-header-medium uk-text-center">Login</h1>
         <form className="uk-form-stacked">
           <div className="uk-margin">
-            {this.props.authenticated === mutations.AUTH_ERROR ? (
-              <p>Bad credentials!</p>
-            ) : null}
+            {this.props.messages.length
+              ? this.props.messages.map(m => {
+                  return <p>{m.msg}</p>;
+                })
+              : null}
             <label className="uk-form-label" htmlFor="form-stacked-text">
               Email
             </label>
@@ -78,8 +81,9 @@ const authenticateUser = (e, p) => {
   return mutations.requestAuth(e, p);
 };
 
-const mapStateToProps = ({ session }) => ({
-  authenticated: session.authenticated
+const mapStateToProps = ({ auth, messages }) => ({
+  auth,
+  messages
 });
 
 const mapDispatchToProps = {

@@ -4,6 +4,8 @@ export const AUTHENTICATING = `AUTHENTICATING`;
 export const AUTHENTICATED = `AUTHENTICATED`;
 export const AUTH_ERROR = `AUTH_ERROR`;
 export const SET_STATE = `SET_STATE`;
+export const ADD_MESSAGE = `ADD_MESSAGE`;
+export const REMOVE_MESSAGE = `REMOVE_MESSAGE`;
 export const REQUEST_ACCOUNT_CREATION = `REQUEST_ACCOUNT_CREATION`;
 
 export const requestAuth = (email, password) => ({
@@ -12,10 +14,19 @@ export const requestAuth = (email, password) => ({
   password
 });
 
-export const processAuth = (status = AUTHENTICATING, session = null) => ({
+export const processAuth = (status = AUTHENTICATING) => ({
   type: PROCESSING_AUTH,
-  session,
   authenticated: status
+});
+
+export const addMessage = msg => ({
+  type: ADD_MESSAGE,
+  msg: msg
+});
+
+export const removeMessage = msg => ({
+  type: REMOVE_MESSAGE,
+  msg: msg
 });
 
 export const setState = (state = {}) => ({
@@ -23,7 +34,7 @@ export const setState = (state = {}) => ({
   state
 });
 
-export const requestCreateAccount = (email, password) => ({
+export const requestAccountCreation = (email, password) => ({
   type: REQUEST_ACCOUNT_CREATION,
   email,
   password

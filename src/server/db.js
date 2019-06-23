@@ -2,9 +2,13 @@ import mongoose from "mongoose";
 import config from "../../config/config.json";
 
 const userSchema = new mongoose.Schema({
-  username: String,
+  email: {
+    unique: true,
+    type: String
+  },
   password: String,
-  tokens: []
+  tokens: [],
+  profile: {}
 });
 
 const User = mongoose.model("User", userSchema, "users");

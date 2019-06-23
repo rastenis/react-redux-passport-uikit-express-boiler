@@ -2,30 +2,43 @@ import { combineReducers } from "redux";
 import * as mutations from "./mutations";
 
 let defaultState = {
-  session: {},
-  users: []
+  data: {},
+  auth: null,
+  messages: []
 };
 
 export const reducer = combineReducers({
-  session(userSession = defaultState.session, action) {
-    let { type, authenticated, session } = action;
+  data(userData = defaultState.data, action) {
+    let { type, data } = action;
     switch (type) {
       case mutations.SET_STATE:
-        return { ...userSession, id: action.state.session.id };
-      case mutations.REQUEST_AUTH:
-        return { ...userSession, authenticated: mutations.AUTHENTICATING };
-      case mutations.PROCESSING_AUTH:
-        return { ...userSession, authenticated };
+        return { ...userData, ...data };
       default:
-        return userSession;
+        return userData;
     }
   },
-
-  users: (users = defaultState.users, action) => {
-    switch (action.type) {
-      case mutations.SET_STATE:
-        return action.state.users;
+  auth(userAuth = defaultState.auth, action) {
+    let { type, authenticated } = action;
+    switch (type) {
+      case mutations.REQUEST_AUTH:
+        return mutations.AUTHENTICATING;
+      case mutations.PROCESSING_AUTH:
+        return authenticated;
+      default:
+        return userAuth;
     }
-    return users;
+  },
+  messages(messages = defaultState.messages, action) {
+    let { type, msg } = action;
+    switch (type) {
+      case mutations.ADD_MESSAGE:
+        return [...messages, msg];
+      case mutations.REMOVE_MESSAGE:
+        return messages.filter(m => {
+          return m.id != msg.id;
+        });
+      default:
+        return messages;
+    }
   }
 });

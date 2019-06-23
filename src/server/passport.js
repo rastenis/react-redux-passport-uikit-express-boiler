@@ -26,7 +26,6 @@ passport.use(
       usernameField: "email"
     },
     async (email, password, done) => {
-      console.log(email, password);
       let [error, user] = await to(
         db.User.findOne({
           email: email.toLowerCase()
@@ -42,7 +41,7 @@ passport.use(
       }
 
       user = new User(user);
-      let [err, matched] = await to(user.comparePassword(password));
+      let [err, matched] = await to(user.verifyPassword(password));
 
       if (err) {
         return done(err);
@@ -82,5 +81,16 @@ export const _promisifiedPassportAuthentication = (req, res) => {
       }
       return ressolve(user);
     })(req, res);
+  });
+};
+
+export const _promisifiedPassportLogin = (req, user) => {
+  return new Promise((ressolve, reject) => {
+    req.logIn(user, (err, user, info) => {
+      if (err) {
+        return reject(err);
+      }
+      return ressolve(user);
+    });
   });
 };

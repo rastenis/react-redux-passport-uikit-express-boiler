@@ -28,6 +28,15 @@ export function Navigation() {
               Login
             </NavLink>
           </li>
+          <li>
+            <NavLink
+              exact
+              activeStyle={{ className: "uk-active", color: "black" }}
+              to="/registration"
+            >
+              Register
+            </NavLink>
+          </li>
         </ul>
       </div>
     </nav>
