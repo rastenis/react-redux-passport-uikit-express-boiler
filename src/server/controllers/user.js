@@ -1,18 +1,17 @@
 import bcrypt from "bcrypt";
 import shortid from "shortid";
 import db from "../db.js";
+import to from "await-to-js";
 
-const config = {
-  rounds: 10
-};
+const saltRounds = 10;
 
 class User {
   constructor(data) {
-    if (!data) {
+    if (!data._id) {
       this.data = {
         tokens: [],
         profile: {},
-        _id: shortid.generate()
+        ...data
       };
 
       this._meta = {
@@ -36,7 +35,7 @@ class User {
     }
   }
 
-  verifyPassword(candidate) {
+  async verifyPassword(candidate) {
     return bcrypt.compare(candidate, this.data.password);
   }
 
@@ -69,10 +68,10 @@ class User {
 
   async hashPassword(password) {
     return new Promise(async (resolve, reject) => {
-      if (this._meta.noPassword) {
+      if (!password || this._meta.noPassword) {
         return resolve(null);
       }
-      let salt = await bcrypt.genSalt(config.rounds);
+      let salt = await bcrypt.genSalt(saltRounds);
       let hash = await bcrypt.hash(password, salt);
       return resolve(hash);
     });
@@ -98,9 +97,9 @@ class User {
         // pre-constructing profile
         this.data.profile = {};
 
-        let [err, inserted] = await to(db.users.insert(this.data).exec());
+        let [err, inserted] = await to(db.User.create(this.data));
+
         if (err) {
-          console.error(err);
           return reject(err);
         }
         return resolve(new User(inserted));
@@ -132,15 +131,7 @@ class User {
       } else {
         this._data = this.data;
         let [err] = await to(
-          db.users
-            .update(
-              {
-                _id: this.data._id
-              },
-              this.data,
-              {}
-            )
-            .exec()
+          db.User.findByIdAndUpdate(this.data._id, this.data, {}).exec()
         );
         if (err) {
           console.error(err);
@@ -165,13 +156,6 @@ class User {
       }
       return resolve();
     });
-  }
-
-  async comparePassword(candidatePassword, cb) {
-    let [err, matched] = await to(
-      bcrypt.compare(candidatePassword, this.data.password)
-    );
-    cb(err, matched);
   }
 
   isModified(field) {
