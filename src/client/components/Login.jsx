@@ -21,15 +21,23 @@ class Login extends Component {
   };
 
   render() {
-    console.log(this.props);
     return (
       <div>
         <h1 className="uk-header-medium uk-text-center">Login</h1>
         <form className="uk-form-stacked">
           <div className="uk-margin">
             {this.props.messages.length
-              ? this.props.messages.map(m => {
-                  return <p>{m.msg}</p>;
+              ? this.props.messages.map((m, index) => {
+                  return (
+                    <div
+                      key={index}
+                      class={m.error ? "uk-alert-danger" : "uk-alert-primary"}
+                      uk-alert="true"
+                    >
+                      <a class="uk-alert-close" uk-close="true" />
+                      <p>{m.msg}</p>
+                    </div>
+                  );
                 })
               : null}
             <label className="uk-form-label" htmlFor="form-stacked-text">
@@ -77,7 +85,6 @@ class Login extends Component {
 }
 
 const authenticateUser = (e, p) => {
-  console.log(e, p);
   return mutations.requestAuth(e, p);
 };
 

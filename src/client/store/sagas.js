@@ -20,12 +20,14 @@ export function* authenticationSaga() {
       });
       yield put(mutations.setState(data.state));
       yield put(mutations.processAuth(mutations.AUTHENTICATED));
-      console.log("pushing dash");
-      history.push(`/dashboard`);
+      yield put(mutations.addMessage({ msg: data.msg, error: false }));
+
+      history.push(`/`);
     } catch (e) {
-      console.log(e);
+      console.log(e.response.data);
       // TODO: set error message
       yield put(mutations.processAuth(mutations.AUTH_ERROR));
+      yield put(mutations.addMessage({ msg: e.response.data, error: true }));
     }
   }
 }
@@ -40,7 +42,9 @@ export function* registrationSaga() {
       });
       yield put(mutations.setState(data.state));
       yield put(mutations.processAuth(mutations.AUTHENTICATED));
-      history.push(`/dashboard`);
+      yield put(mutations.addMessage(data.msg));
+
+      history.push(`/`);
     } catch (e) {
       console.log(e);
       // TODO: set error message

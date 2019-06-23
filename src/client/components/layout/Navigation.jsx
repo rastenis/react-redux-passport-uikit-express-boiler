@@ -19,6 +19,10 @@ export function Navigation() {
               Dashboard
             </NavLink>
           </li>
+        </ul>
+      </div>
+      <div className="uk-navbar-right">
+        <ul className="uk-navbar-nav">
           <li>
             <NavLink
               exact

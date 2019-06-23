@@ -10,6 +10,11 @@ import passportConfig, {
 import path from "path";
 import to from "await-to-js";
 import bodyParser from "body-parser";
+import session from "express-session";
+import mongoose from "mongoose";
+import mongoStore from "connect-mongo";
+const MongoStore = mongoStore(session);
+
 import config from "../../config/config.json";
 
 const port = config.port || process.env.PORT || 3001;
@@ -19,8 +24,25 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(helmet());
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(
+  session({
+    secret: process.env.SECRET || config.secret,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      maxAge: null,
+      secure: false
+    },
+    store: new MongoStore({
+      mongooseConnection: mongoose.createConnection(
+        config.mongooseConnectionString
+      )
+    })
+  })
+);
+
+app.use(passport.initialize(), passport.session());
 
 if (process.env.NODE_ENV == `production`) {
   app.use(express.static(path.resolve(__dirname, "../../dist")));
@@ -33,6 +55,14 @@ app.get("/api/test", (req, res) => {
   return res.send({ success: true });
 });
 
+// reject everything below here if the user is signed in already
+app.use((req, res, next) => {
+  if (req.user) {
+    return res.status(500).send("You are already signed in!");
+  }
+  return next();
+});
+
 app.post("/api/auth", async (req, res) => {
   console.log(`LOGIN | requester: ${req.body.email}`);
 
@@ -40,7 +70,6 @@ app.post("/api/auth", async (req, res) => {
 
   if (err) {
     console.error(err);
-
     return res.status(500).send("Authentication error!");
   }
   if (!user) {
@@ -55,7 +84,6 @@ app.post("/api/auth", async (req, res) => {
     return res.status(500).send("Authentication error!");
   }
 
-  console.log("authenticated.");
   return res.send({
     msg: "You have successfully logged in!",
     state: { profile: { ...user.data.profile, id: user.data._id } }
@@ -98,7 +126,10 @@ app.post("/api/register", async (req, res) => {
     console.error(err);
     return res.status(500).send("Authentication error!");
   }
-  return res.send("You have successfully registered!");
+  return res.send({
+    msg: "You have successfully registered!",
+    state: { profile: { ...user.data.profile, id: user.data._id } }
+  });
 });
 
 app.listen(port, console.log(`Server listening on port ${port}`));
