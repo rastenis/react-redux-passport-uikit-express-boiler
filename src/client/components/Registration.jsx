@@ -10,7 +10,7 @@ class Registration extends Component {
       email: "",
       password: "",
       passwordConf: "",
-      error: this.props.error || ""
+      errors: []
     };
   }
 
@@ -19,6 +19,37 @@ class Registration extends Component {
   };
 
   submitRegistration = () => {
+    // clearing previous errors
+    this.state.errors = [];
+
+    // validation
+    if (!/\S+@\S+\.\S+/.test(this.state.email)) {
+      this.props.addMessage({ error: true, msg: "Invalid email address!" });
+      this.state.errors.push("email");
+      return;
+    }
+
+    // invalid password length
+    if (this.state.password.length < 5 || this.state.password.length > 100) {
+      this.props.addMessage({
+        error: true,
+        msg: "Password must be between 5 and a 100 characters!"
+      });
+      this.state.errors.push("password");
+      return;
+    }
+
+    // non-matching passwords
+    if (this.state.password != this.state.passwordConf) {
+      this.props.addMessage({
+        error: true,
+        msg: "Passwords do not match!"
+      });
+      this.state.errors.push("password");
+      return;
+    }
+
+    // proceeding
     this.props.registerUser(this.state.email, this.state.password);
   };
 
@@ -33,7 +64,11 @@ class Registration extends Component {
             </label>
             <div className="uk-form-controls uk-margin-small-bottom">
               <input
-                className="uk-input"
+                className={`uk-input ${
+                  this.state.errors.find(e => e == "email")
+                    ? "uk-form-danger"
+                    : null
+                }`}
                 id="form-stacked-text"
                 type="text"
                 placeholder="Email"
@@ -47,7 +82,11 @@ class Registration extends Component {
             </label>
             <div className="uk-form-controls uk-margin-small-bottom">
               <input
-                className="uk-input"
+                className={`uk-input ${
+                  this.state.errors.find(e => e == "password")
+                    ? "uk-form-danger"
+                    : null
+                }`}
                 id="form-stacked-text"
                 name="password"
                 type="password"
@@ -61,7 +100,11 @@ class Registration extends Component {
             </label>
             <div className="uk-form-controls uk-margin-small-bottom">
               <input
-                className="uk-input"
+                className={`uk-input ${
+                  this.state.errors.find(e => e == "password")
+                    ? "uk-form-danger"
+                    : null
+                }`}
                 id="form-stacked-text"
                 name="passwordConf"
                 type="password"
@@ -87,8 +130,11 @@ class Registration extends Component {
 }
 
 const registerUser = (e, p) => {
-  console.log(e, p);
   return mutations.requestAccountCreation(e, p);
+};
+
+const addMessage = m => {
+  return mutations.addMessage(m);
 };
 
 const mapStateToProps = ({ auth, messages }) => ({
@@ -97,7 +143,8 @@ const mapStateToProps = ({ auth, messages }) => ({
 });
 
 const mapDispatchToProps = {
-  registerUser
+  registerUser,
+  addMessage
 };
 
 export const ConnectedRegistration = connect(
