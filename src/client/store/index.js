@@ -4,6 +4,8 @@ import { createLogger } from "redux-logger";
 import createSagaMiddleware from "redux-saga";
 const sagaMiddleware = createSagaMiddleware();
 import * as sagas from "./sagas";
+import * as mutations from "./mutations";
+
 import { composeWithDevTools } from "redux-devtools-extension";
 
 const store = createStore(
@@ -16,3 +18,6 @@ for (let saga in sagas) {
 }
 
 export default store;
+
+// init
+store.dispatch({ type: mutations.REQUEST_SESSION_FETCH });

@@ -7,6 +7,7 @@ export const SET_STATE = `SET_STATE`;
 export const ADD_MESSAGE = `ADD_MESSAGE`;
 export const REMOVE_MESSAGE = `REMOVE_MESSAGE`;
 export const REQUEST_ACCOUNT_CREATION = `REQUEST_ACCOUNT_CREATION`;
+export const REQUEST_SESSION_FETCH = `REQUEST_SESSION_FETCH`;
 
 export const requestAuth = (email, password) => ({
   type: REQUEST_AUTH,

@@ -52,3 +52,18 @@ export function* registrationSaga() {
     }
   }
 }
+
+export function* sessionFetchSaga() {
+  while (true) {
+    yield take(mutations.REQUEST_SESSION_FETCH);
+    try {
+      const { data } = yield axios.get(`http://${url}/api/ping`);
+      yield put(mutations.setState(data.state));
+      yield put(
+        mutations.processAuth(data.auth ? mutations.AUTHENTICATED : null)
+      );
+
+      history.push(`/`);
+    } catch (e) {}
+  }
+}

@@ -44,6 +44,8 @@ app.use(
 
 app.use(passport.initialize(), passport.session());
 
+app.listen(port, console.log(`Server listening on port ${port}`));
+
 if (process.env.NODE_ENV == `production`) {
   app.use(express.static(path.resolve(__dirname, "../../dist")));
   app.get("/*", (req, res) => {
@@ -51,8 +53,8 @@ if (process.env.NODE_ENV == `production`) {
   });
 }
 
-app.get("/api/test", (req, res) => {
-  return res.send({ success: true });
+app.get("/api/ping", (req, res) => {
+  return res.send({ auth: Boolean(req.user) });
 });
 
 // reject everything below here if the user is signed in already
@@ -131,5 +133,3 @@ app.post("/api/register", async (req, res) => {
     state: { profile: { ...user.data.profile, id: user.data._id } }
   });
 });
-
-app.listen(port, console.log(`Server listening on port ${port}`));
