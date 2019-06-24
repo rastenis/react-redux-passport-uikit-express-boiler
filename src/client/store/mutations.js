@@ -9,6 +9,7 @@ export const REMOVE_MESSAGE = `REMOVE_MESSAGE`;
 export const REQUEST_ACCOUNT_CREATION = `REQUEST_ACCOUNT_CREATION`;
 export const REQUEST_SESSION_FETCH = `REQUEST_SESSION_FETCH`;
 export const REQUEST_LOGOUT = `REQUEST_LOGOUT`;
+export const WAITING = `WAITING`;
 
 export const requestAuth = (email, password) => ({
   type: REQUEST_AUTH,
@@ -37,7 +38,7 @@ export const removeMessage = msg => ({
 
 export const setState = (state = {}) => ({
   type: SET_STATE,
-  state
+  data: state
 });
 
 export const requestAccountCreation = (email, password) => ({

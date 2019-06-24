@@ -3,7 +3,7 @@ import * as mutations from "./mutations";
 
 let defaultState = {
   data: {},
-  auth: null,
+  auth: mutations.WAITING,
   messages: []
 };
 

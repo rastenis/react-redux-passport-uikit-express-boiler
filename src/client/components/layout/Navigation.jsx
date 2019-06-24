@@ -32,7 +32,6 @@ class Navigation extends Component {
             <ul className="uk-navbar-nav">
               <li>
                 <a
-                  exact
                   className="uk-text-danger"
                   onClick={this.props.requestLogout}
                 >
