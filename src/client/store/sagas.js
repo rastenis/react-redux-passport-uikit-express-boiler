@@ -67,3 +67,15 @@ export function* sessionFetchSaga() {
     } catch (e) {}
   }
 }
+
+export function* logoutFetchSaga() {
+  while (true) {
+    yield take(mutations.REQUEST_LOGOUT);
+    try {
+      yield axios.post(`http://${url}/api/logout`);
+      yield put(mutations.setState({}));
+      yield put(mutations.processAuth(null));
+      history.push(`/`);
+    } catch (e) {}
+  }
+}

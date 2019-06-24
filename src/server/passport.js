@@ -74,23 +74,35 @@ export const isAuthorized = (req, res, next) => {
 };
 
 export const _promisifiedPassportAuthentication = (req, res) => {
-  return new Promise((ressolve, reject) => {
+  return new Promise((resolve, reject) => {
     passport.authenticate("local", (err, user, info) => {
       if (err) {
         return reject(err);
       }
-      return ressolve(user);
+      return resolve(user);
     })(req, res);
   });
 };
 
 export const _promisifiedPassportLogin = (req, user) => {
-  return new Promise((ressolve, reject) => {
+  return new Promise((resolve, reject) => {
     req.logIn(user, (err, user, info) => {
       if (err) {
         return reject(err);
       }
-      return ressolve(user);
+      return resolve(user);
+    });
+  });
+};
+
+export const _promisifiedPassportLogout = req => {
+  return new Promise((resolve, reject) => {
+    req.logout();
+    req.session.destroy(err => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve();
     });
   });
 };

@@ -31,9 +31,13 @@ class Navigation extends Component {
           {this.props.auth == mutations.AUTHENTICATED ? (
             <ul className="uk-navbar-nav">
               <li>
-                <NavLink exact className="uk-text-danger" to="/logout">
+                <a
+                  exact
+                  className="uk-text-danger"
+                  onClick={this.props.requestLogout}
+                >
                   Logout
-                </NavLink>
+                </a>
               </li>
             </ul>
           ) : (
@@ -64,8 +68,19 @@ class Navigation extends Component {
   }
 }
 
+const requestLogout = () => {
+  return mutations.requestLogout();
+};
+
 const mapStateToProps = ({ auth }) => ({
   auth
 });
 
-export const ConnectedNavigation = connect(mapStateToProps)(Navigation);
+const mapDispatchToProps = {
+  requestLogout
+};
+
+export const ConnectedNavigation = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Navigation);

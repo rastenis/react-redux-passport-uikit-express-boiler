@@ -5,7 +5,8 @@ import User from "./controllers/user";
 import passport from "passport";
 import passportConfig, {
   _promisifiedPassportAuthentication,
-  _promisifiedPassportLogin
+  _promisifiedPassportLogin,
+  _promisifiedPassportLogout
 } from "./passport.js";
 import path from "path";
 import to from "await-to-js";
@@ -55,6 +56,20 @@ if (process.env.NODE_ENV == `production`) {
 
 app.get("/api/ping", (req, res) => {
   return res.send({ auth: Boolean(req.user) });
+});
+
+// user logout route
+app.post("/api/logout", async (req, res) => {
+  if (!req.user) {
+    return;
+  }
+
+  let [err] = await to(_promisifiedPassportLogout(req));
+
+  if (err) {
+    console.error("Error : Failed to destroy the session during logout.", err);
+  }
+  return res.sendStatus(200);
 });
 
 // reject everything below here if the user is signed in already
