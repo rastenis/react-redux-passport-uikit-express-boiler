@@ -1,18 +1,35 @@
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Router, Route } from "react-router-dom";
 import React from "react";
-import Login from "../Login";
-import Dashboard from "../Dashboard";
-import Navigation from "./Navigation";
+
+// components
+import { ConnectedLogin } from "../Login";
+import { ConnectedRegistration } from "../Registration";
+import { ConnectedDashboard } from "../Dashboard";
+import { ConnectedNavigation } from "./Navigation";
+import { OnlyUnauthenticated } from "./PrivateRoute";
+import { ConnectedMessages } from "./Messages";
+
+// store
+import store from "../../store";
+import { history } from "../../store/history";
+import { Provider } from "react-redux";
 
 export default function Layout() {
   return (
     <div>
-      <Router>
-        <Navigation />
-        <div className="uk-container uk-width-1-3 uk-margin-medium-top">
-          <Route exact path="/" component={Dashboard} />
-          <Route path="/login" component={Login} />
-        </div>
+      <Router history={history}>
+        <Provider store={store}>
+          <ConnectedNavigation />
+          <ConnectedMessages />
+          <div className="uk-container uk-width-1-3 uk-margin-medium-top">
+            <Route exact path="/" component={ConnectedDashboard} />
+            <OnlyUnauthenticated path="/login" component={ConnectedLogin} />
+            <OnlyUnauthenticated
+              path="/registration"
+              component={ConnectedRegistration}
+            />
+          </div>
+        </Provider>
       </Router>
     </div>
   );

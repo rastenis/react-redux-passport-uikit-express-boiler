@@ -1,8 +1,8 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 
-import db from "./db";
-import keysConf from "../../config/key.json";
+import db from "./db.js";
+import keysConf from "../../config/passportKeys.json";
 import User from "./controllers/user.js";
 import to from "await-to-js";
 
@@ -26,60 +26,44 @@ passport.use(
       usernameField: "email"
     },
     async (email, password, done) => {
-      let [err, user] = await to(
+      let [error, user] = await to(
         db.User.findOne({
           email: email.toLowerCase()
         }).exec()
       );
 
-      if (err) {
-        return done(err);
+      if (error) {
+        return done(error);
       }
 
       if (!user) {
-        return done(
-          {
-            msg: `Email ${email} not found.`
-          },
-          false
-        );
+        return done(`Email ${email} not found.`);
       }
 
       user = new User(user);
-      let [err, matched] = await to(user.comparePassword(password));
+      let [err, matched] = await to(user.verifyPassword(password));
 
       if (err) {
         return done(err);
       }
 
-      if (isMatch) {
+      if (matched) {
         return done(null, user);
       }
 
-      return done(
-        {
-          msg: "Invalid credentials."
-        },
-        false
-      );
+      return done("Invalid credentials.");
     }
   )
 );
 
-/*
- * Login Required middleware.
- */
-exports.isAuthenticated = (req, res, next) => {
+export const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
   res.redirect("/login");
 };
 
-/*
- * Authorization Required middleware.
- */
-exports.isAuthorized = (req, res, next) => {
+export const isAuthorized = (req, res, next) => {
   const provider = req.path.split("/").slice(-1)[0];
   const token = req.user.data.tokens.find(token => token.kind === provider);
   if (token) {
@@ -87,4 +71,38 @@ exports.isAuthorized = (req, res, next) => {
   }
 
   res.redirect(`/auth/${provider}`);
+};
+
+export const _promisifiedPassportAuthentication = (req, res) => {
+  return new Promise((resolve, reject) => {
+    passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve(user);
+    })(req, res);
+  });
+};
+
+export const _promisifiedPassportLogin = (req, user) => {
+  return new Promise((resolve, reject) => {
+    req.logIn(user, (err, user, info) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve(user);
+    });
+  });
+};
+
+export const _promisifiedPassportLogout = req => {
+  return new Promise((resolve, reject) => {
+    req.logout();
+    req.session.destroy(err => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve();
+    });
+  });
 };

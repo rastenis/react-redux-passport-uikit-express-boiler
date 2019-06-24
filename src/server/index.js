@@ -1,11 +1,20 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import bcrypt from "bcrypt";
+import User from "./controllers/user";
+import passport from "passport";
+import passportConfig, {
+  _promisifiedPassportAuthentication,
+  _promisifiedPassportLogin,
+  _promisifiedPassportLogout
+} from "./passport.js";
+import path from "path";
 import to from "await-to-js";
-
 import bodyParser from "body-parser";
-import db from "./db";
+import session from "express-session";
+import mongoose from "mongoose";
+import mongoStore from "connect-mongo";
+const MongoStore = mongoStore(session);
 
 import config from "../../config/config.json";
 
@@ -16,6 +25,27 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(helmet());
+app.use(
+  session({
+    secret: process.env.SECRET || config.secret,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      maxAge: null,
+      secure: false
+    },
+    store: new MongoStore({
+      mongooseConnection: mongoose.createConnection(
+        config.mongooseConnectionString
+      )
+    })
+  })
+);
+
+app.use(passport.initialize(), passport.session());
+
+app.listen(port, console.log(`Server listening on port ${port}`));
 
 if (process.env.NODE_ENV == `production`) {
   app.use(express.static(path.resolve(__dirname, "../../dist")));
@@ -24,21 +54,97 @@ if (process.env.NODE_ENV == `production`) {
   });
 }
 
-app.post("/auth", async (req, res) => {
-  console.log(`LOGIN | requester: ${req.body.email}`, 0);
+app.get("/api/ping", (req, res) => {
+  return res.send({ auth: Boolean(req.user) });
+});
 
-  let [err] = await req.logIn(user);
+// user logout route
+app.post("/api/logout", async (req, res) => {
+  if (!req.user) {
+    return;
+  }
+
+  let [err] = await to(_promisifiedPassportLogout(req));
+
+  if (err) {
+    console.error("Error : Failed to destroy the session during logout.", err);
+  }
+  return res.sendStatus(200);
+});
+
+// reject everything below here if the user is signed in already
+app.use((req, res, next) => {
+  if (req.user) {
+    return res.status(500).send("You are already signed in!");
+  }
+  return next();
+});
+
+app.post("/api/auth", async (req, res) => {
+  console.log(`LOGIN | requester: ${req.body.email}`);
+
+  let [err, user] = await to(_promisifiedPassportAuthentication(req, res));
 
   if (err) {
     console.error(err);
+    return res.status(500).send("Authentication error!");
+  }
+  if (!user) {
+    // all failed logins default to the same error message
+    return res.status(401).send("Wrong credentials!");
   }
 
-  return res.json({
-    meta: {
-      error: false
-    },
-    user: user
+  [err] = await to(_promisifiedPassportLogin(req, user));
+
+  if (err) {
+    console.error(err);
+    return res.status(500).send("Authentication error!");
+  }
+
+  return res.send({
+    msg: "You have successfully logged in!",
+    state: { profile: { ...user.data.profile, id: user.data._id } }
   });
 });
 
-app.listen(port, console.log("Server listening on port ", port));
+app.post("/api/register", async (req, res) => {
+  console.log(`REGISTRATION | requester: ${req.body.email}`);
+
+  if (req.user) {
+    return res.status(500).send("You are signed in!");
+  }
+
+  // mirrored validation checks
+  if (!/\S+@\S+\.\S+/.test(req.body.email)) {
+    return res.status(500).send("Enter a valid email address.");
+  } else if (req.body.password.length < 5 || req.body.password.length > 100) {
+    // arbitrary
+    return res
+      .status(500)
+      .send("Password must be between 5 and a 100 characters.");
+  }
+
+  let user = new User(req.body);
+
+  let [err] = await to(user.saveUser());
+
+  if (err) {
+    if (err.code == 11000) {
+      return res.status(500).send("User with given email already exists!");
+    } else {
+      console.log(err);
+      return res.status(500).send("Server error. Try again later.");
+    }
+  }
+
+  [err] = await to(_promisifiedPassportLogin(req, user));
+
+  if (err) {
+    console.error(err);
+    return res.status(500).send("Authentication error!");
+  }
+  return res.send({
+    msg: "You have successfully registered!",
+    state: { profile: { ...user.data.profile, id: user.data._id } }
+  });
+});
