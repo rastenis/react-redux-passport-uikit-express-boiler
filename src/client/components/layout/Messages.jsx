@@ -11,10 +11,10 @@ export class Messages extends Component {
               return (
                 <div
                   key={index}
-                  class={m.error ? "uk-alert-danger" : "uk-alert-primary"}
+                  className={m.error ? "uk-alert-danger" : "uk-alert-primary"}
                   uk-alert="true"
                 >
-                  <a class="uk-alert-close" uk-close="true" />
+                  <a className="uk-alert-close" uk-close="true" />
                   <p>{m.msg}</p>
                 </div>
               );

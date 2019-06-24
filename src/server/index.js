@@ -129,7 +129,7 @@ app.post("/api/register", async (req, res) => {
   let [err] = await to(user.saveUser());
 
   if (err) {
-    if (err.errorType == "uniqueViolated") {
+    if (err.code == 11000) {
       return res.status(500).send("User with given email already exists!");
     } else {
       console.log(err);
@@ -137,7 +137,7 @@ app.post("/api/register", async (req, res) => {
     }
   }
 
-  [err] = await to(req.logIn(user));
+  [err] = await to(_promisifiedPassportLogin(req, user));
 
   if (err) {
     console.error(err);

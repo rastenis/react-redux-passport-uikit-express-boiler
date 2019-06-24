@@ -49,6 +49,7 @@ export function* registrationSaga() {
       console.log(e);
       // TODO: set error message
       yield put(mutations.processAuth(mutations.AUTH_ERROR));
+      yield put(mutations.addMessage({ msg: e.response.data, error: true }));
     }
   }
 }
