@@ -1,15 +1,17 @@
 import { Router, Route } from "react-router-dom";
 import React from "react";
+
+// components
 import { ConnectedLogin } from "../Login";
 import { ConnectedRegistration } from "../Registration";
-
 import { ConnectedDashboard } from "../Dashboard";
-import { Navigation } from "./Navigation";
+import { ConnectedNavigation } from "./Navigation";
+import { OnlyUnauthenticated } from "./PrivateRoute";
 import { ConnectedMessages } from "./Messages";
 
+// store
 import store from "../../store";
 import { history } from "../../store/history";
-
 import { Provider } from "react-redux";
 
 export default function Layout() {
@@ -17,12 +19,15 @@ export default function Layout() {
     <div>
       <Router history={history}>
         <Provider store={store}>
-          <Navigation />
+          <ConnectedNavigation />
           <ConnectedMessages />
           <div className="uk-container uk-width-1-3 uk-margin-medium-top">
             <Route exact path="/" component={ConnectedDashboard} />
-            <Route path="/login" component={ConnectedLogin} />
-            <Route path="/registration" component={ConnectedRegistration} />
+            <OnlyUnauthenticated path="/login" component={ConnectedLogin} />
+            <OnlyUnauthenticated
+              path="/registration"
+              component={ConnectedRegistration}
+            />
           </div>
         </Provider>
       </Router>
