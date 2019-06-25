@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import * as mutations from "../store/mutations";
 import { connect } from "react-redux";
+import { NavLink } from "react-router-dom";
 
 class Dashboard extends Component {
   render() {
@@ -14,7 +15,17 @@ class Dashboard extends Component {
               <p>Loading...</p>
             ) : this.props.data.people ? ( // listing out people (if data contains people to list)
               this.props.data.people.map((person, index) => {
-                return <li key={index}>{person.name}</li>;
+                return (
+                  <li key={index}>
+                    {person.name}{" "}
+                    <NavLink
+                      to={`/user/${index}`}
+                      className="uk-button-default uk-button-small uk-float-right"
+                    >
+                      Details
+                    </NavLink>
+                  </li>
+                );
               })
             ) : null
           ) : (
