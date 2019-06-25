@@ -1,13 +1,14 @@
 {
   "name": "react-redux-passport-uikit-express-boiler",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A React+Redux boilerplate using Express as backend, UIKit for frontend, MongoDB for storage & Passport for auth.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack -p",
     "dev": "webpack-dev-server",
-    "dev-server": "nodemon src/server --exec babel-node src/server"
+    "dev-server": "nodemon src/server --exec babel-node src/server",
+    "start": "cross-env NODE_ENV=production babel-node src/server"
   },
   "author": "Scharkee",
   "repository": {
@@ -53,6 +54,7 @@
     "@babel/register": "^7.4.4",
     "babel": "^6.23.0",
     "babel-loader": "^8.0.6",
+    "cross-env": "^5.2.0",
     "css-loader": "^3.0.0",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",

@@ -14,7 +14,7 @@ export function* authenticationSaga() {
   while (true) {
     const { email, password } = yield take(mutations.REQUEST_AUTH);
     try {
-      const { data } = yield axios.post(`http://${url}/api/auth`, {
+      const { data } = yield axios.post(`/api/auth`, {
         email,
         password
       });
@@ -36,7 +36,7 @@ export function* registrationSaga() {
   while (true) {
     const { email, password } = yield take(mutations.REQUEST_ACCOUNT_CREATION);
     try {
-      const { data } = yield axios.post(`http://${url}/api/register`, {
+      const { data } = yield axios.post(`/api/register`, {
         email,
         password
       });
@@ -58,7 +58,7 @@ export function* sessionFetchSaga() {
   while (true) {
     yield take(mutations.REQUEST_SESSION_FETCH);
     try {
-      const { data } = yield axios.get(`http://${url}/api/data`);
+      const { data } = yield axios.get(`/api/data`);
       yield put(mutations.setState(data.state));
       yield put(
         mutations.processAuth(data.auth ? mutations.AUTHENTICATED : null)
@@ -73,7 +73,7 @@ export function* logoutSaga() {
   while (true) {
     yield take(mutations.REQUEST_LOGOUT);
     try {
-      yield axios.post(`http://${url}/api/logout`);
+      yield axios.post(`https://${url}/api/logout`);
       yield put(mutations.setState({}));
       yield put(mutations.processAuth(null));
       history.push(`/`);

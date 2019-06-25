@@ -14,12 +14,15 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
-    proxy: {
-      "/api": {
-        target: `http://localhost:${config.port}`,
-        secure: false
-      }
-    }
+    proxy:
+      process.env.NODE_ENV == "production"
+        ? null
+        : {
+            "/api": {
+              target: `http://localhost:${config.port}`,
+              secure: false
+            }
+          }
   },
   module: {
     rules: [

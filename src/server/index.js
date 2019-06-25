@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import User from "./controllers/user";
 import passport from "passport";
 import passportConfig, {
   _promisifiedPassportAuthentication,
@@ -19,8 +18,15 @@ const MongoStore = mongoStore(session);
 
 import config from "../../config/config.json";
 
+import unAuth from "./routes/unAuth";
+
 const port = config.port || process.env.PORT || 3001;
 const app = express();
+
+// proxy providing tls
+if (config.secureOverride) {
+  app.set("trust proxy", 1);
+}
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -28,13 +34,18 @@ app.use(bodyParser.json());
 app.use(helmet());
 app.use(
   session({
-    secret: process.env.SECRET || config.secret,
+    name: "boilerSessionId",
+    secret: config.secret,
     resave: false,
     saveUninitialized: false,
     cookie: {
-      httpOnly: true,
-      maxAge: null,
-      secure: false
+      secure: config.selfHosted == "1" || config.secureOverride ? true : false,
+      // 4 hours cookie expiration when secure, infinite when unsecure.
+      maxAge:
+        config.selfHosted == "1" || config.secureOverride
+          ? Date.now() + 60 * 60 * 1000 * 4
+          : null,
+      domain: config.url.replace(/http:\/\/|https:\/\//g, "")
     },
     store: new MongoStore({
       mongooseConnection: mongoose.createConnection(
@@ -46,34 +57,54 @@ app.use(
 
 app.use(passport.initialize(), passport.session());
 
-app.listen(port, console.log(`Server listening on port ${port}`));
+// routes
+app.use("/", unAuth);
 
-if (process.env.NODE_ENV == `production`) {
-  app.use(express.static(path.resolve(__dirname, "../../dist")));
-  app.get("/*", (req, res) => {
-    res.sendFile(path.resolve("index.html"));
-  });
-}
+app.get(
+  "/auth/google",
+  passport.authenticate("google", {
+    scope: "profile email"
+  })
+);
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/login"
+  }),
+  (req, res) => {
+    res.redirect(req.session.returnTo || "/");
+  }
+);
+app.get("/auth/twitter", passport.authenticate("twitter"));
+app.get(
+  "/auth/twitter/callback",
+  passport.authenticate("twitter", {
+    failureRedirect: "/login"
+  }),
+  (req, res) => {
+    res.redirect(req.session.returnTo || "/");
+  }
+);
 
 app.get("/api/data", (req, res) => {
-  if (req.user) {
-    // returning async data
-    return res.send({
-      auth: true,
-      state: {
-        profile: req.user.profile,
-        // mock 'static' data
-        people: Array.apply(null, Array(4)).map(() => {
-          return {
-            name: faker.name.findName(),
-            email: faker.internet.email(),
-            contact: faker.helpers.createCard()
-          };
-        })
-      }
-    });
+  if (!req.user) {
+    return res.send({ auth: false });
   }
-  return res.send({ auth: false });
+  // returning async data
+  return res.send({
+    auth: true,
+    state: {
+      profile: req.user.profile,
+      // mock 'static' data
+      people: Array.apply(null, Array(4)).map(() => {
+        return {
+          name: faker.name.findName(),
+          email: faker.internet.email(),
+          contact: faker.helpers.createCard()
+        };
+      })
+    }
+  });
 });
 
 // user logout route
@@ -90,77 +121,11 @@ app.post("/api/logout", async (req, res) => {
   return res.sendStatus(200);
 });
 
-// reject everything below here if the user is signed in already
-app.use((req, res, next) => {
-  if (req.user) {
-    return res.status(500).send("You are already signed in!");
-  }
-  return next();
-});
-
-app.post("/api/auth", async (req, res) => {
-  console.log(`LOGIN | requester: ${req.body.email}`);
-
-  let [err, user] = await to(_promisifiedPassportAuthentication(req, res));
-
-  if (err) {
-    console.error(err);
-    return res.status(500).send("Authentication error!");
-  }
-  if (!user) {
-    // all failed logins default to the same error message
-    return res.status(401).send("Wrong credentials!");
-  }
-
-  [err] = await to(_promisifiedPassportLogin(req, user));
-
-  if (err) {
-    console.error(err);
-    return res.status(500).send("Authentication error!");
-  }
-
-  return res.send({
-    msg: "You have successfully logged in!",
-    state: { profile: { ...user.data.profile, id: user.data._id } }
+if (process.env.NODE_ENV == `production`) {
+  app.use(express.static(path.resolve(__dirname, "../../dist")));
+  app.get("/*", (req, res) => {
+    res.sendFile(path.resolve("index.html"));
   });
-});
+}
 
-app.post("/api/register", async (req, res) => {
-  console.log(`REGISTRATION | requester: ${req.body.email}`);
-
-  if (req.user) {
-    return res.status(500).send("You are signed in!");
-  }
-
-  // mirrored validation checks
-  if (!/\S+@\S+\.\S+/.test(req.body.email)) {
-    return res.status(500).send("Enter a valid email address.");
-  } else if (req.body.password.length < 5 || req.body.password.length > 100) {
-    // arbitrary
-    return res
-      .status(500)
-      .send("Password must be between 5 and a 100 characters.");
-  }
-
-  let [err, user] = await to(new User(req.body).saveUser());
-
-  if (err) {
-    if (err.code == 11000) {
-      return res.status(500).send("User with given email already exists!");
-    } else {
-      console.log(err);
-      return res.status(500).send("Server error. Try again later.");
-    }
-  }
-
-  [err] = await to(_promisifiedPassportLogin(req, user));
-
-  if (err) {
-    console.error(err);
-    return res.status(500).send("Authentication error!");
-  }
-  return res.send({
-    msg: "You have successfully registered!",
-    state: { profile: { ...user.data.profile, id: user.data._id } }
-  });
-});
+app.listen(port, console.log(`Server listening on port ${port}`));
