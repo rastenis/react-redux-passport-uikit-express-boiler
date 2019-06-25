@@ -13,6 +13,7 @@ import to from "await-to-js";
 import bodyParser from "body-parser";
 import session from "express-session";
 import mongoose from "mongoose";
+import faker from "faker";
 import mongoStore from "connect-mongo";
 const MongoStore = mongoStore(session);
 
@@ -54,8 +55,25 @@ if (process.env.NODE_ENV == `production`) {
   });
 }
 
-app.get("/api/ping", (req, res) => {
-  return res.send({ auth: Boolean(req.user) });
+app.get("/api/data", (req, res) => {
+  if (req.user) {
+    // returning async data
+    return res.send({
+      auth: true,
+      state: {
+        profile: req.user.profile,
+        // mock 'static' data
+        people: Array.apply(null, Array(4)).map(() => {
+          return {
+            name: faker.name.findName(),
+            email: faker.internet.email(),
+            contact: faker.helpers.createCard()
+          };
+        })
+      }
+    });
+  }
+  return res.send({ auth: false });
 });
 
 // user logout route
@@ -124,9 +142,7 @@ app.post("/api/register", async (req, res) => {
       .send("Password must be between 5 and a 100 characters.");
   }
 
-  let user = new User(req.body);
-
-  let [err] = await to(user.saveUser());
+  let [err, user] = await to(new User(req.body).saveUser());
 
   if (err) {
     if (err.code == 11000) {

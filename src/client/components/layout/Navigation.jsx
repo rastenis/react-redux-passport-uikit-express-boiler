@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import * as mutations from "../../store/mutations";
 
@@ -32,7 +32,6 @@ class Navigation extends Component {
             <ul className="uk-navbar-nav">
               <li>
                 <a
-                  exact
                   className="uk-text-danger"
                   onClick={this.props.requestLogout}
                 >

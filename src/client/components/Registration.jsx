@@ -57,6 +57,7 @@ class Registration extends Component {
     return (
       <div>
         <h1 className="uk-header-medium uk-text-center">Register</h1>
+        <hr />
         <form className="uk-form-stacked">
           <div className="uk-margin">
             <label className="uk-form-label" htmlFor="form-stacked-text">

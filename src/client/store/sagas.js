@@ -42,7 +42,7 @@ export function* registrationSaga() {
       });
       yield put(mutations.setState(data.state));
       yield put(mutations.processAuth(mutations.AUTHENTICATED));
-      yield put(mutations.addMessage(data.msg));
+      yield put(mutations.addMessage({ msg: data.msg, error: false }));
 
       history.push(`/`);
     } catch (e) {
@@ -58,7 +58,7 @@ export function* sessionFetchSaga() {
   while (true) {
     yield take(mutations.REQUEST_SESSION_FETCH);
     try {
-      const { data } = yield axios.get(`http://${url}/api/ping`);
+      const { data } = yield axios.get(`http://${url}/api/data`);
       yield put(mutations.setState(data.state));
       yield put(
         mutations.processAuth(data.auth ? mutations.AUTHENTICATED : null)
@@ -69,7 +69,7 @@ export function* sessionFetchSaga() {
   }
 }
 
-export function* logoutFetchSaga() {
+export function* logoutSaga() {
   while (true) {
     yield take(mutations.REQUEST_LOGOUT);
     try {

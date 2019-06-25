@@ -88,7 +88,6 @@ class User {
 
   async saveUser() {
     if (this._meta.new) {
-      // TODO: duplicate rejections
       return new Promise(async (resolve, reject) => {
         // generating hashed password
         let hashed = await this.hashPassword(this.data.password);
