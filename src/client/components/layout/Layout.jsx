@@ -6,8 +6,9 @@ import { ConnectedLogin } from "../Login";
 import { ConnectedRegistration } from "../Registration";
 import { ConnectedDashboard } from "../Dashboard";
 import { ConnectedNavigation } from "./Navigation";
-import { OnlyUnauthenticated } from "./PrivateRoute";
+import { OnlyUnauthenticated, OnlyAuthenticated } from "./PrivateRoute";
 import { ConnectedMessages } from "./Messages";
+//import { ConnectedUserInformation } from "../UserInformation";
 
 // store
 import store from "../../store";
@@ -24,6 +25,7 @@ export default function Layout() {
           <div className="uk-container uk-width-1-3 uk-margin-medium-top">
             <Route exact path="/" component={ConnectedDashboard} />
             <OnlyUnauthenticated path="/login" component={ConnectedLogin} />
+            <OnlyAuthenticated path="/user" component={ConnectedLogin} />
             <OnlyUnauthenticated
               path="/registration"
               component={ConnectedRegistration}

@@ -7,6 +7,7 @@ class Dashboard extends Component {
     return (
       <div>
         <h1 className="uk-header-medium uk-text-center">Dashboard</h1>
+        <hr className="uk-margin-medium-bottom" />
         <ul className="uk-list uk-list-divider">
           {this.props.auth ? ( // waiting for async data
             this.props.auth == mutations.WAITING ? (
