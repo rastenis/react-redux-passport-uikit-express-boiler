@@ -3,7 +3,7 @@ import axios from "axios";
 import { history } from "./history";
 import * as mutations from "./mutations";
 
-const url = window.location.host;
+const url = process.env.NODE_ENV == "production" ? "" : `http://localhost:8082`;
 
 axios.interceptors.request.use(request => {
   console.log("Starting Request", request);
@@ -14,7 +14,7 @@ export function* authenticationSaga() {
   while (true) {
     const { email, password } = yield take(mutations.REQUEST_AUTH);
     try {
-      const { data } = yield axios.post(`/api/auth`, {
+      const { data } = yield axios.post(`${url}/api/auth`, {
         email,
         password
       });
@@ -36,7 +36,7 @@ export function* registrationSaga() {
   while (true) {
     const { email, password } = yield take(mutations.REQUEST_ACCOUNT_CREATION);
     try {
-      const { data } = yield axios.post(`/api/register`, {
+      const { data } = yield axios.post(`${url}/api/register`, {
         email,
         password
       });
@@ -58,7 +58,7 @@ export function* sessionFetchSaga() {
   while (true) {
     yield take(mutations.REQUEST_SESSION_FETCH);
     try {
-      const { data } = yield axios.get(`/api/data`);
+      const { data } = yield axios.get(`${url}/api/data`);
       yield put(mutations.setState(data.state));
       yield put(
         mutations.processAuth(data.auth ? mutations.AUTHENTICATED : null)
@@ -73,7 +73,7 @@ export function* logoutSaga() {
   while (true) {
     yield take(mutations.REQUEST_LOGOUT);
     try {
-      yield axios.post(`https://${url}/api/logout`);
+      yield axios.post(`${url}/api/logout`);
       yield put(mutations.setState({}));
       yield put(mutations.processAuth(null));
       history.push(`/`);

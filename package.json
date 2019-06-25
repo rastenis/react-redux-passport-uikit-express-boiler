@@ -5,10 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "echo \"Error: no deployment options yet\" && exit 1",
     "build": "webpack -p",
-    "dev": "webpack-dev-server",
+    "dev": "npm run dev-client & npm run dev-server && fg",
     "dev-server": "nodemon src/server --exec babel-node src/server",
-    "start": "cross-env NODE_ENV=production babel-node src/server"
+    "dev-client": "webpack-dev-server",
+    "start": "cross-env NODE_ENV=production babel-node src/server",
+    "launch": "npm run build; npm run start"
   },
   "author": "Scharkee",
   "repository": {
