@@ -88,7 +88,7 @@ passport.use(
       }
 
       if (req.user) {
-        // linking twitter with existing logged in account
+        // linking Twitter with existing logged in account
         let user = new User(req.user.data);
         user.data.twitter = profile.id;
         user.data.tokens.push({
@@ -116,7 +116,7 @@ passport.use(
           return done(err);
         }
 
-        // twitter linked successfully
+        // Twitter linked successfully
         return done(null, user);
       }
 
@@ -143,6 +143,90 @@ passport.use(
       }
 
       // created a new account via Twitter
+      return done(null, createdUser);
+    }
+  )
+);
+
+// GOOGLE
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: keysConf.GOOGLE_ID,
+      clientSecret: keysConf.GOOGLE_SECRET,
+      callbackURL: `${config.url || ""}/auth/google/callback`,
+      passReqToCallback: true
+    },
+    async (req, accessToken, refreshToken, profile, done) => {
+      // checking for linked accounts
+      let [error, existingUser] = await to(
+        db.User.findOne({
+          twitter: profile.id
+        }).exec()
+      );
+
+      if (error) {
+        return done(error);
+      }
+
+      if (existingUser) {
+        if (req.user) {
+          return done("This Google account is already linked.");
+        }
+        return done(null, new User(existingUser));
+      }
+
+      if (req.user) {
+        // linking Google with existing logged in account
+        user = new User(req.user.data);
+        user.data.google = profile.id;
+        user.data.tokens.push({
+          kind: "google",
+          accessToken
+        });
+
+        user.data.profile.name = user.data.profile.name || profile.displayName;
+        user.data.profile.gender =
+          user.data.profile.gender || profile._json.gender;
+        user.data.profile.picture =
+          user.data.profile.picture || profile._json.picture;
+
+        // save user
+        let [linkError, linkedUser] = await to(user.saveUser());
+
+        if (linkError) {
+          return done(linkError);
+        }
+
+        let [err] = await to(_promisifiedPassportLogin(req, linkedUser));
+
+        if (err) {
+          return done(err);
+        }
+
+        // Google linked successfully
+        return done(null, user);
+      }
+
+      // create new user
+      const user = new User();
+      user._meta.noPassword = true;
+      user.data.email = profile.emails[0].value;
+      user.data.google = profile.id;
+      user.data.tokens.push({
+        kind: "google",
+        accessToken
+      });
+      user.data.profile.name = profile.displayName;
+      user.data.profile.gender = profile._json.gender;
+      user.data.profile.picture = profile._json.picture;
+      let [creationError, createdUser] = await to(user.saveUser());
+
+      if (creationError) {
+        return done(creationError);
+      }
+
+      // created a new account via Google
       return done(null, createdUser);
     }
   )
