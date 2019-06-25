@@ -1,8 +1,11 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
+import { Strategy as TwitterStrategy } from "passport-twitter";
+import { OAuth2Strategy as GoogleStrategy } from "passport-google-oauth";
 
 import db from "./db.js";
 import keysConf from "../../config/passportKeys.json";
+import config from "../../config/config.json";
 import User from "./controllers/user.js";
 import to from "await-to-js";
 
@@ -52,6 +55,95 @@ passport.use(
       }
 
       return done("Invalid credentials.");
+    }
+  )
+);
+
+// TWITTER
+passport.use(
+  new TwitterStrategy(
+    {
+      consumerKey: keysConf.TWITTER_KEY,
+      consumerSecret: keysConf.TWITTER_SECRET,
+      callbackURL: `${config.url || ""}/auth/twitter/callback`,
+      passReqToCallback: true
+    },
+    async (req, accessToken, tokenSecret, profile, done) => {
+      // checking for linked accounts
+      let [error, existingUser] = await to(
+        db.User.findOne({
+          twitter: profile.id
+        }).exec()
+      );
+
+      if (error) {
+        return done(error);
+      }
+
+      if (existingUser) {
+        if (req.user) {
+          return done("This Twitter account is already linked.");
+        }
+        return done(null, new User(existingUser));
+      }
+
+      if (req.user) {
+        // linking twitter with existing logged in account
+        let user = new User(req.user.data);
+        user.data.twitter = profile.id;
+        user.data.tokens.push({
+          kind: "twitter",
+          accessToken,
+          tokenSecret
+        });
+        // profile info
+        user.data.profile.name = user.data.profile.name || profile.displayName;
+        user.data.profile.location =
+          user.data.profile.location || profile._json.location;
+        user.data.profile.picture =
+          user.data.profile.picture || profile._json.profile_image_url_https;
+
+        // save user
+        let [linkError, linkedUser] = await to(user.saveUser());
+
+        if (linkError) {
+          return done(linkError);
+        }
+
+        let [err] = await to(_promisifiedPassportLogin(req, linkedUser));
+
+        if (err) {
+          return done(err);
+        }
+
+        // twitter linked successfully
+        return done(null, user);
+      }
+
+      // create new user
+      const user = new User();
+      // Twitter will not provide an email address, so we save the Twitter handle, which is unique,
+      // and produce a fake 'email':
+      user.data.email = `${profile.username}@twitter.com`;
+      user._meta.noPassword = true;
+      user.data.twitter = profile.id;
+      user.data.tokens.push({
+        kind: "twitter",
+        accessToken,
+        tokenSecret
+      });
+      user.data.profile.name = profile.displayName;
+      user.data.profile.location = profile._json.location;
+      user.data.profile.picture = profile._json.profile_image_url_https;
+
+      let [creationError, createdUser] = await to(user.saveUser());
+
+      if (creationError) {
+        return done(creationError);
+      }
+
+      // created a new account via Twitter
+      return done(null, createdUser);
     }
   )
 );

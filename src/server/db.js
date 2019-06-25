@@ -8,7 +8,9 @@ const userSchema = new mongoose.Schema({
   },
   password: String,
   tokens: [],
-  profile: {}
+  profile: {},
+  google: String,
+  twitter: String
 });
 
 const User = mongoose.model("User", userSchema, "users");
