@@ -82,7 +82,12 @@ passport.use(
 
       if (existingUser) {
         if (req.user) {
-          return done("This Twitter account is already linked.");
+          req.session.message = {
+            msg: "This Twitter account is already linked.",
+            error: true
+          };
+
+          return done(null, false);
         }
         return done(null, new User(existingUser));
       }
@@ -113,7 +118,12 @@ passport.use(
         let [err] = await to(_promisifiedPassportLogin(req, linkedUser));
 
         if (err) {
-          return done(err);
+          req.session.message = {
+            msg: "Internal server error.",
+            error: true
+          };
+
+          return done(null, false);
         }
 
         // Twitter linked successfully
@@ -139,7 +149,12 @@ passport.use(
       let [creationError, createdUser] = await to(user.saveUser());
 
       if (creationError) {
-        return done(creationError);
+        req.session.message = {
+          msg: "Internal server error.",
+          error: true
+        };
+
+        return done(null, false);
       }
 
       // created a new account via Twitter
