@@ -1,4 +1,4 @@
-import { Router, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 import React from "react";
 
 // components
@@ -11,31 +11,32 @@ import { ConnectedMessages } from "./Messages";
 import { ConnectedUserInformation } from "../UserInformation";
 
 // store
-import store from "../../store";
 import { history } from "../../store/history";
-import { Provider } from "react-redux";
+import ProviderWithRouter from "./ProviderWithRouter";
 
 export default function Layout() {
   return (
     <div>
-      <Router history={history}>
-        <Provider store={store}>
+      <BrowserRouter history={history}>
+        <ProviderWithRouter>
           <ConnectedNavigation />
           <ConnectedMessages />
           <div className="uk-container uk-width-1-3 uk-margin-medium-top">
-            <Route exact path="/" component={ConnectedDashboard} />
-            <OnlyUnauthenticated path="/login" component={ConnectedLogin} />
-            <OnlyAuthenticated
-              path="/user/:index"
-              component={ConnectedUserInformation}
-            />
-            <OnlyUnauthenticated
-              path="/registration"
-              component={ConnectedRegistration}
-            />
+            <Switch>
+              <Route exact path="/" component={ConnectedDashboard} />
+              <OnlyUnauthenticated path="/login" component={ConnectedLogin} />
+              <OnlyAuthenticated
+                path="/user/:index"
+                component={ConnectedUserInformation}
+              />
+              <OnlyUnauthenticated
+                path="/registration"
+                component={ConnectedRegistration}
+              />
+            </Switch>
           </div>
-        </Provider>
-      </Router>
+        </ProviderWithRouter>
+      </BrowserRouter>
     </div>
   );
 }

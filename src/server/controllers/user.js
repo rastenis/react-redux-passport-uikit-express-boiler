@@ -7,7 +7,7 @@ const saltRounds = 10;
 
 class User {
   constructor(data) {
-    if (!data._id) {
+    if (!data || !data._id) {
       this.data = {
         tokens: [],
         profile: {},

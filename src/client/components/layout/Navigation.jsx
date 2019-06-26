@@ -6,7 +6,7 @@ import * as mutations from "../../store/mutations";
 class Navigation extends Component {
   render() {
     return (
-      <nav className="uk-navbar-container" uk-navbar="true">
+      <nav className="uk-navbar-container uk-navbar" uk-navbar="true">
         <div className="uk-navbar-left">
           <ul className="uk-navbar-nav">
             <li

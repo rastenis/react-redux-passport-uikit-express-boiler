@@ -58,7 +58,10 @@ class Registration extends Component {
       <div>
         <h1 className="uk-header-medium uk-text-center">Register</h1>
         <hr />
-        <form className="uk-form-stacked">
+        <form
+          style={{ width: "60%" }}
+          className="uk-form-stacked uk-container uk-container-center"
+        >
           <div className="uk-margin">
             <label className="uk-form-label" htmlFor="form-stacked-text">
               Email
@@ -117,7 +120,7 @@ class Registration extends Component {
             <div className="uk-form-controls uk-margin-small-bottom">
               <button
                 type="button"
-                className="uk-button uk-button-secondary"
+                className="uk-button uk-button-primary uk-width-expand"
                 onClick={this.submitRegistration}
               >
                 Submit
