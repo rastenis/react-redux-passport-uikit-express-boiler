@@ -1,6 +1,6 @@
 {
   "name": "react-redux-passport-uikit-express-boiler",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A React+Redux boilerplate using Express as backend, UIKit for frontend, MongoDB for storage & Passport for auth.",
   "main": "index.js",
   "scripts": {
