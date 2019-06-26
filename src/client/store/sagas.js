@@ -10,7 +10,7 @@ axios.interceptors.request.use(request => {
   return request;
 });
 
-export function* authenticationSaga() {
+export function* authenticationSaga(context) {
   while (true) {
     const { email, password } = yield take(mutations.REQUEST_AUTH);
     try {
@@ -22,7 +22,7 @@ export function* authenticationSaga() {
       yield put(mutations.processAuth(mutations.AUTHENTICATED));
       yield put(mutations.addMessage({ msg: data.msg, error: false }));
 
-      history.push(`/`);
+      context.routerHistory.push("/");
     } catch (e) {
       console.log(e.response.data);
       // TODO: set error message
@@ -63,6 +63,12 @@ export function* sessionFetchSaga() {
       yield put(
         mutations.processAuth(data.auth ? mutations.AUTHENTICATED : null)
       );
+
+      // register server side messages, if any
+      if (Object.keys(data.message || {}).length > 0) {
+        console.log("ok");
+        yield put(mutations.addMessage(data.message));
+      }
 
       history.push(`/`);
     } catch (e) {}

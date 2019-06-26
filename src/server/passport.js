@@ -161,7 +161,7 @@ passport.use(
       // checking for linked accounts
       let [error, existingUser] = await to(
         db.User.findOne({
-          twitter: profile.id
+          google: profile.id
         }).exec()
       );
 
@@ -171,8 +171,14 @@ passport.use(
 
       if (existingUser) {
         if (req.user) {
-          return done("This Google account is already linked.");
+          req.session.message = {
+            msg: "This Google account is already linked.",
+            error: true
+          };
+
+          return done(null, false);
         }
+
         return done(null, new User(existingUser));
       }
 
@@ -201,7 +207,12 @@ passport.use(
         let [err] = await to(_promisifiedPassportLogin(req, linkedUser));
 
         if (err) {
-          return done(err);
+          req.session.message = {
+            msg: "Internal server error.",
+            error: true
+          };
+
+          return done(null, false);
         }
 
         // Google linked successfully
@@ -217,17 +228,32 @@ passport.use(
         kind: "google",
         accessToken
       });
+
       user.data.profile.name = profile.displayName;
       user.data.profile.gender = profile._json.gender;
       user.data.profile.picture = profile._json.picture;
       let [creationError, createdUser] = await to(user.saveUser());
 
       if (creationError) {
-        return done(creationError);
+        if (creationError.code == 11000) {
+          req.session.message = {
+            msg: "This email account is already in use!",
+            error: true
+          };
+
+          return done(null, false);
+        } else {
+          req.session.message = {
+            msg: "Internal server error.",
+            error: true
+          };
+
+          return done(null, false);
+        }
       }
 
       // created a new account via Google
-      return done(null, createdUser);
+      return done(null, new User(createdUser));
     }
   )
 );

@@ -88,9 +88,14 @@ app.get(
 );
 
 app.get("/api/data", (req, res) => {
+  // processing messages
+  let m = Object.assign({}, req.session.message);
+  delete req.session.message;
+
   if (!req.user) {
-    return res.send({ auth: false });
+    return res.send({ auth: false, message: m });
   }
+
   // returning async data
   return res.send({
     auth: true,
@@ -104,7 +109,8 @@ app.get("/api/data", (req, res) => {
           contact: faker.helpers.createCard()
         };
       })
-    }
+    },
+    message: req.session.message
   });
 });
 
