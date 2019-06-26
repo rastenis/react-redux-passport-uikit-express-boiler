@@ -9,7 +9,7 @@
     "build": "webpack -p",
     "dev": "npm run dev-client & npm run dev-server && fg",
     "dev-server": "nodemon src/server --exec babel-node src/server",
-    "dev-client": "webpack-dev-server",
+    "dev-client": "webpack-dev-server --port 8081 --host 0.0.0.0",
     "start": "cross-env NODE_ENV=production babel-node src/server",
     "launch": "npm run build; npm run start"
   },
@@ -62,6 +62,7 @@
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
     "style-loader": "^0.23.1",
+    "svg-inline-loader": "^0.8.0",
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2"
   }

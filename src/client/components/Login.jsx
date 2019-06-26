@@ -25,7 +25,10 @@ class Login extends Component {
       <div>
         <h1 className="uk-header-medium uk-text-center">Login</h1>
         <hr />
-        <form className="uk-form-stacked">
+        <form
+          style={{ width: "60%" }}
+          className="uk-form-stacked uk-container uk-container-center"
+        >
           <div className="uk-margin">
             <label className="uk-form-label" htmlFor="form-stacked-text">
               Email
@@ -58,11 +61,36 @@ class Login extends Component {
             <div className="uk-form-controls uk-margin-small-bottom">
               <button
                 type="button"
-                className="uk-button uk-button-primary"
+                className="uk-button uk-button-secondary uk-width-expand uk-margin-small-bottom"
                 onClick={this.submitLogin}
               >
                 Submit
               </button>
+              <a
+                type="button"
+                className="uk-button uk-button-default uk-width-expand uk-margin-small-bottom"
+                onClick={this.submitLogin}
+                href="/auth/google"
+              >
+                <span
+                  uk-icon="icon: google"
+                  className=" uk-margin-small-right"
+                />
+                Sign in with Google
+              </a>
+
+              <a
+                type="button"
+                className="uk-button uk-button-default uk-width-expand uk-margin-small-bottom"
+                onClick={this.submitLogin}
+                href="/auth/twitter"
+              >
+                <span
+                  uk-icon="icon: twitter"
+                  className=" uk-margin-small-right"
+                />
+                Sign in with Twitter
+              </a>
             </div>
           </div>
         </form>

@@ -3,7 +3,7 @@ import axios from "axios";
 import { history } from "./history";
 import * as mutations from "./mutations";
 
-const url = process.env.NODE_ENV == "production" ? "" : `http://localhost:8082`;
+const url = process.env.NODE_ENV == "production" ? "" : `http://localhost:7777`;
 
 axios.interceptors.request.use(request => {
   console.log("Starting Request", request);

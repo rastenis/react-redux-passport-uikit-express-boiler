@@ -1,5 +1,5 @@
 {
-  "port": 8082,
+  "port": 7777,
   "mongooseConnectionString": "mongodb://127.0.0.1:27017/main",
   "saltAmount": 11,
   "secret": "very-secret-phrase",

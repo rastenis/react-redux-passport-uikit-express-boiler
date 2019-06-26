@@ -31,11 +31,6 @@ class UserInformation extends PureComponent {
                 <b className=" uk-margin-small-right">Company:</b>
                 {this.person.contact.company.name}
               </div>
-              <div className=" uk-margin-small-right" /> (
-              <div className="  uk-text-muted  uk-text-justify   uk-text-bottom">
-                "{this.person.contact.company.catchPhrase}"
-              </div>
-              )
             </div>
             <hr />
             <div style={{ display: "inline-flex" }}>
@@ -46,14 +41,14 @@ class UserInformation extends PureComponent {
                 this.person.contact.address.zipcode
               }`}
             </div>
+            <NavLink
+              to="/"
+              className=" uk-display-block uk-text-center uk-button-default uk-button-small uk-margin-medium-top"
+            >
+              back
+            </NavLink>
           </div>
         }
-        <NavLink
-          to="/"
-          className="uk-position-center uk-button-default uk-button-small uk-margin-large-top"
-        >
-          back
-        </NavLink>
       </div>
     );
   }
