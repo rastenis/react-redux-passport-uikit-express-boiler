@@ -31,6 +31,15 @@ class Navigation extends Component {
           {this.props.auth == mutations.AUTHENTICATED ? (
             <ul className="uk-navbar-nav">
               <li>
+                <NavLink
+                  exact
+                  activeStyle={{ className: "uk-active", color: "black" }}
+                  to="/profile"
+                >
+                  Profile
+                </NavLink>
+              </li>
+              <li>
                 <a
                   className="uk-text-danger"
                   onClick={this.props.requestLogout}

@@ -100,7 +100,7 @@ app.get("/api/data", (req, res) => {
   return res.send({
     auth: true,
     state: {
-      profile: req.user.profile,
+      userData: req.user.data,
       // mock 'static' data
       people: Array.apply(null, Array(4)).map(() => {
         return {
