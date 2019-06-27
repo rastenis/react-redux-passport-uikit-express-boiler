@@ -59,7 +59,7 @@ export const requestPasswordChange = newPassword => ({
   newPassword
 });
 
-export const requestAuthUnlink = name => ({
+export const requestAuthUnlink = toUnlink => ({
   type: REQUEST_AUTH_UNLINK,
-  name
+  toUnlink
 });

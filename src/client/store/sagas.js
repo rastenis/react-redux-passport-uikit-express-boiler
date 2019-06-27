@@ -74,12 +74,13 @@ export function* passwordChangeSaga() {
 }
 export function* authUnlinkSaga() {
   while (true) {
-    const { name } = yield take(mutations.REQUEST_AUTH_UNLINK);
+    const { toUnlink } = yield take(mutations.REQUEST_AUTH_UNLINK);
     try {
       const { data } = yield axios.post(`${url}/api/unlink`, {
-        name
+        toUnlink
       });
       yield put(mutations.addMessage({ msg: data.msg, error: false }));
+      yield put(mutations.setState(data.userData));
     } catch (e) {
       console.log(e);
       yield put(mutations.addMessage({ msg: e.response.data, error: true }));

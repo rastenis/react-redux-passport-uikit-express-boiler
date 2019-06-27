@@ -47,11 +47,11 @@ class Profile extends Component {
   };
 
   submitUnlinkAuth = e => {
-    // proceeding
-    this.props.unlinkAuth(e.target.name.replace("Unlink", ""));
+    this.props.unlinkAuth(e.target.target);
   };
 
   render() {
+    console.log(this.props.data);
     return (
       <div>
         <h1 className="uk-header-medium uk-text-center">Profile</h1>
@@ -131,8 +131,55 @@ class Profile extends Component {
           style={{ width: "60%" }}
           className="uk-form-stacked uk-container uk-container-center"
         >
+          <hr className=" uk-margin-small-top" />
           <h3>Linked Accounts</h3>
-          wip
+          {this.props.data.userData.google ? (
+            <a
+              type="button"
+              className="uk-button uk-button-danger  uk-width-expand uk-margin-small-bottom"
+              onClick={this.submitUnlinkAuth}
+              target="google"
+            >
+              <span uk-icon="icon: google" className=" uk-margin-small-right" />
+              Unlink Google
+            </a>
+          ) : (
+            <a
+              type="button"
+              className="uk-button uk-button-default uk-width-expand uk-margin-small-bottom"
+              href="/auth/google"
+            >
+              <span uk-icon="icon: google" className=" uk-margin-small-right" />
+              Link Google
+            </a>
+          )}
+
+          {this.props.data.userData.twitter ? (
+            <a
+              type="button"
+              className="uk-button uk-button-danger uk-width-expand uk-margin-small-bottom"
+              onClick={this.submitUnlinkAuth}
+              target="twitter"
+            >
+              <span
+                uk-icon="icon: twitter"
+                className=" uk-margin-small-right"
+              />
+              Unlink Twitter
+            </a>
+          ) : (
+            <a
+              type="button"
+              className="uk-button uk-button-default uk-width-expand uk-margin-small-bottom"
+              href="/auth/twitter"
+            >
+              <span
+                uk-icon="icon: twitter"
+                className=" uk-margin-small-right"
+              />
+              Link Twitter
+            </a>
+          )}
         </div>
       </div>
     );
@@ -143,8 +190,8 @@ const changePassword = p => {
   return mutations.requestPasswordChange(p);
 };
 
-const unlinkAuth = name => {
-  return mutations.requestAuthUnlink(name);
+const unlinkAuth = toUnlink => {
+  return mutations.requestAuthUnlink(toUnlink);
 };
 const addMessage = m => {
   return mutations.addMessage(m);

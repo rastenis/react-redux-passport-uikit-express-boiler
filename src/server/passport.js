@@ -214,6 +214,7 @@ passport.use(
 
         // save user
         let [linkError, linkedUser] = await to(user.saveUser());
+        console.log(linkedUser);
 
         if (linkError) {
           return done(linkError);
