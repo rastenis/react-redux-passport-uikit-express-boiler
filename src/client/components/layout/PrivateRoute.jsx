@@ -4,49 +4,41 @@ import { connect } from "react-redux";
 
 import * as mutations from "../../store/mutations";
 
-export class OnlyUnauthenticated extends React.Component {
-  constructor(args) {
-    super(args);
-    this.a = args;
-  }
+const OnlyUnauthenticated = ({ component: Component, ...rest }) => {
+  console.log(rest);
 
-  render() {
-    return (
-      <Route
-        {...this.a}
-        render={() =>
-          this.props.auth === mutations.AUTHENTICATED ? (
-            <Redirect to="/" />
-          ) : (
-            <Component {...this.props} />
-          )
-        }
-      />
-    );
-  }
-}
+  return (
+    <Route
+      {...rest}
+      render={props => {
+        console.log(props);
+        return props.auth === mutations.AUTHENTICATED ? (
+          <Redirect to="/" />
+        ) : (
+          <Component {...props} />
+        );
+      }}
+    />
+  );
+};
 
-export class OnlyAuthenticated extends React.Component {
-  constructor(args) {
-    super(args);
-    this.a = args;
-  }
+const OnlyAuthenticated = ({ component: Component, ...rest }) => {
+  console.log(rest);
 
-  render() {
-    return (
-      <Route
-        {...this.a}
-        render={() =>
-          this.props.auth !== mutations.AUTHENTICATED ? (
-            <Redirect to="/" />
-          ) : (
-            <Component {...this.props} />
-          )
-        }
-      />
-    );
-  }
-}
+  return (
+    <Route
+      {...rest}
+      render={props => {
+        console.log(props);
+        return props.auth !== mutations.AUTHENTICATED ? (
+          <Redirect to="/" />
+        ) : (
+          <Component {...props} />
+        );
+      }}
+    />
+  );
+};
 
 const mapStateToProps = ({ auth }) => ({
   auth
