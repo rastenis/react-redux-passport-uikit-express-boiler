@@ -4,13 +4,12 @@ import { connect } from "react-redux";
 
 import * as mutations from "../../store/mutations";
 
-const OnlyUnauthenticated = ({ component: Component, ...rest }) => {
+const OnlyUnauthenticated = ({ component: Component, auth, ...rest }) => {
   return (
     <Route
       {...rest}
       render={props => {
-        console.log(props);
-        return props.auth === mutations.AUTHENTICATED ? (
+        return auth === mutations.AUTHENTICATED ? (
           <Redirect to="/" />
         ) : (
           <Component {...props} />
@@ -20,13 +19,12 @@ const OnlyUnauthenticated = ({ component: Component, ...rest }) => {
   );
 };
 
-const OnlyAuthenticated = ({ component: Component, ...rest }) => {
+const OnlyAuthenticated = ({ component: Component, auth, ...rest }) => {
   return (
     <Route
       {...rest}
       render={props => {
-        console.log(props);
-        return props.auth !== mutations.AUTHENTICATED ? (
+        return auth !== mutations.AUTHENTICATED ? (
           <Redirect to="/" />
         ) : (
           <Component {...props} />

@@ -14,12 +14,12 @@ import session from "express-session";
 import mongoose from "mongoose";
 import faker from "faker";
 import mongoStore from "connect-mongo";
-const MongoStore = mongoStore(session);
 
 import config from "../../config/config.json";
+import onlyUnAuth from "./routes/unAuth";
+import onlyAuth from "./routes/auth";
 
-import unAuth from "./routes/unAuth";
-
+const MongoStore = mongoStore(session);
 const port = config.port || process.env.PORT || 3001;
 const app = express();
 
@@ -58,9 +58,13 @@ app.use(
 
 app.use(passport.initialize(), passport.session());
 
-// routes
-app.use("/", unAuth);
+// only unauthenticated users allowed
+app.use("/", onlyUnAuth);
 
+// only authhenticated users allowed
+app.use("/", onlyAuth);
+
+// passportjs auth + callback routes
 app.get(
   "/auth/google",
   passport.authenticate("google", {
@@ -87,6 +91,7 @@ app.get(
   }
 );
 
+// data fetch route (initially just a session ping to avoid localStorage, now user mock data preload has been added)
 app.get("/api/data", (req, res) => {
   // processing messages
   let m = Object.assign({}, req.session.message);
@@ -100,7 +105,7 @@ app.get("/api/data", (req, res) => {
   return res.send({
     auth: true,
     state: {
-      profile: req.user.profile,
+      userData: req.user.data,
       // mock 'static' data
       people: Array.apply(null, Array(4)).map(() => {
         return {
@@ -110,22 +115,8 @@ app.get("/api/data", (req, res) => {
         };
       })
     },
-    message: req.session.message
+    message: m
   });
-});
-
-// user logout route
-app.post("/api/logout", async (req, res) => {
-  if (!req.user) {
-    return;
-  }
-
-  let [err] = await to(_promisifiedPassportLogout(req));
-
-  if (err) {
-    console.error("Error : Failed to destroy the session during logout.", err);
-  }
-  return res.sendStatus(200);
 });
 
 if (process.env.NODE_ENV == `production`) {

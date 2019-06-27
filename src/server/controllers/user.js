@@ -1,5 +1,4 @@
 import bcrypt from "bcrypt";
-import shortid from "shortid";
 import db from "../db.js";
 import to from "await-to-js";
 
@@ -37,33 +36,6 @@ class User {
 
   async verifyPassword(candidate) {
     return bcrypt.compare(candidate, this.data.password);
-  }
-
-  async password(newPassword = false) {
-    if (newPassword !== false) {
-      // generate new password, store locally & update db
-      return new Promise(async (resolve, reject) => {
-        let hashed = await this.hashPassword(this.data.password);
-
-        let [err] = await to(
-          db.User.findByIdAndUpdate(this.data._id, {
-            $set: { password: hashed }
-          }).exec()
-        );
-
-        if (err) {
-          return reject(err);
-        }
-
-        // prepping a modified version of the user,
-        // complete with the changed & hashed new password
-        this.data.password = hashed;
-        this._data.password = hashed;
-        return resolve(this);
-      });
-    }
-    // return the hashed password
-    return this.data.password;
   }
 
   async hashPassword(password) {
@@ -106,11 +78,9 @@ class User {
     }
 
     return new Promise(async (resolve, reject) => {
-      if (this.isModified("password")) {
+      if (this.data.isModified("password")) {
         let hashed = await this.hashPassword(this.data.password);
         this.data.password = hashed;
-
-        this.data.password = hash;
         this._data = this.data;
         let [err] = await to(
           db.User.updateOne(

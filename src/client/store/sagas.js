@@ -28,10 +28,9 @@ export function* authenticationSaga(context) {
 
       context.routerHistory.push("/");
     } catch (e) {
-      console.log(e);
       // TODO: set error message
       yield put(mutations.processAuth(mutations.AUTH_ERROR));
-      yield put(mutations.addMessage({ msg: e.data, error: true }));
+      yield put(mutations.addMessage({ msg: e.response.data, error: true }));
     }
   }
 }
@@ -50,9 +49,39 @@ export function* registrationSaga() {
 
       context.routerHistory.push("/");
     } catch (e) {
-      console.log(e);
       // TODO: set error message
       yield put(mutations.processAuth(mutations.AUTH_ERROR));
+      yield put(mutations.addMessage({ msg: e.response.data, error: true }));
+    }
+  }
+}
+
+export function* passwordChangeSaga() {
+  while (true) {
+    const { newPassword, oldPassword } = yield take(
+      mutations.REQUEST_PASSWORD_CHANGE
+    );
+    try {
+      const { data } = yield axios.post(`${url}/api/changePassword`, {
+        oldPassword,
+        newPassword
+      });
+      yield put(mutations.addMessage({ msg: data.msg, error: false }));
+    } catch (e) {
+      yield put(mutations.addMessage({ msg: e.response.data, error: true }));
+    }
+  }
+}
+export function* authUnlinkSaga() {
+  while (true) {
+    const { toUnlink } = yield take(mutations.REQUEST_AUTH_UNLINK);
+    try {
+      const { data } = yield axios.post(`${url}/api/unlink`, {
+        toUnlink
+      });
+      yield put(mutations.addMessage({ msg: data.msg, error: false }));
+      yield put(mutations.setState(data.state));
+    } catch (e) {
       yield put(mutations.addMessage({ msg: e.response.data, error: true }));
     }
   }
@@ -70,7 +99,6 @@ export function* sessionFetchSaga() {
 
       // register server side messages, if any
       if (Object.keys(data.message || {}).length > 0) {
-        console.log("ok");
         yield put(mutations.addMessage(data.message));
       }
       context.routerHistory.push("/");
@@ -87,7 +115,6 @@ export function* logoutSaga() {
       yield axios.post(`${url}/api/logout`);
       yield put(mutations.clearState());
       yield put(mutations.processAuth(null));
-
       context.routerHistory.push("/");
     } catch (e) {}
   }

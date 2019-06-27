@@ -127,11 +127,15 @@ passport.use(
         }
 
         // Twitter linked successfully
+        req.session.message = {
+          msg: "Twitter successfully linked!",
+          error: false
+        };
         return done(null, user);
       }
 
       // create new user
-      const user = new User();
+      let user = new User();
       // Twitter will not provide an email address, so we save the Twitter handle, which is unique,
       // and produce a fake 'email':
       user.data.email = `${profile.username}@twitter.com`;
@@ -158,6 +162,10 @@ passport.use(
       }
 
       // created a new account via Twitter
+      req.session.message = {
+        msg: "Created a new account via Twitter!",
+        error: false
+      };
       return done(null, createdUser);
     }
   )
@@ -199,7 +207,7 @@ passport.use(
 
       if (req.user) {
         // linking Google with existing logged in account
-        user = new User(req.user.data);
+        let user = new User(req.user.data);
         user.data.google = profile.id;
         user.data.tokens.push({
           kind: "google",
@@ -231,11 +239,15 @@ passport.use(
         }
 
         // Google linked successfully
+        req.session.message = {
+          msg: "Google successfully linked!",
+          error: false
+        };
         return done(null, user);
       }
 
       // create new user
-      const user = new User();
+      let user = new User();
       user._meta.noPassword = true;
       user.data.email = profile.emails[0].value;
       user.data.google = profile.id;
@@ -268,6 +280,10 @@ passport.use(
       }
 
       // created a new account via Google
+      req.session.message = {
+        msg: "Created a new account via Google!",
+        error: false
+      };
       return done(null, new User(createdUser));
     }
   )

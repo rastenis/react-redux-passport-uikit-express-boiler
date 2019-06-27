@@ -12,6 +12,7 @@ import {
 } from "./PrivateRoute";
 import { ConnectedMessages } from "./Messages";
 import { ConnectedUserInformation } from "../UserInformation";
+import { ConnectedProfile } from "../Profile";
 
 // store
 import ProviderWithRouter from "./ProviderWithRouter";
@@ -37,6 +38,10 @@ export default function Layout() {
               <ConnectedOnlyUnauthenticated
                 path="/registration"
                 component={ConnectedRegistration}
+              />
+              <ConnectedOnlyAuthenticated
+                path="/profile"
+                component={ConnectedProfile}
               />
             </Switch>
           </div>

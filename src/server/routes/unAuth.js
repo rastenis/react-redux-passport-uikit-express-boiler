@@ -47,10 +47,6 @@ router.post("/api/auth", check, async (req, res) => {
 router.post("/api/register", check, async (req, res) => {
   console.log(`REGISTRATION | requester: ${req.body.email}`);
 
-  if (req.user) {
-    return res.status(500).send("You are signed in!");
-  }
-
   // mirrored validation checks
   if (!/\S+@\S+\.\S+/.test(req.body.email)) {
     return res.status(500).send("Enter a valid email address.");
@@ -67,7 +63,7 @@ router.post("/api/register", check, async (req, res) => {
     if (err.code == 11000) {
       return res.status(500).send("User with given email already exists!");
     } else {
-      console.log(err);
+      console.error(err);
       return res.status(500).send("Server error. Try again later.");
     }
   }
