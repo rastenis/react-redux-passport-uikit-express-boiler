@@ -9,7 +9,6 @@ const OnlyUnauthenticated = ({ component: Component, auth, ...rest }) => {
     <Route
       {...rest}
       render={props => {
-        console.log(props);
         return auth === mutations.AUTHENTICATED ? (
           <Redirect to="/" />
         ) : (

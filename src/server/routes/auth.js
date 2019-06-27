@@ -36,7 +36,8 @@ router.post("/api/unlink", check, async (req, res) => {
   req.user = savedUser;
 
   return res.send({
-    userData: req.user.data
+    state: { userData: req.user.data },
+    msg: "Successfully unlinked!"
   });
 });
 
@@ -54,7 +55,7 @@ router.post("/api/changePassword", check, async (req, res) => {
   let [err, savedUser] = await to(user.saveUser());
 
   if (err) {
-    console.log(err);
+    console.error(err);
     return res.status(500).send("Server error. Try again later.");
   }
 

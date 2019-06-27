@@ -47,6 +47,11 @@ class Profile extends Component {
 
     // proceeding
     this.props.changePassword(this.state.oldPassword, this.state.newPassword);
+
+    // resetting form
+    this.state.newPassword = "";
+    this.state.newPasswordConf = "";
+    this.state.oldPassword = "";
   };
 
   submitUnlinkAuth = e => {

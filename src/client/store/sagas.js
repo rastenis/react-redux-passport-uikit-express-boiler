@@ -80,7 +80,7 @@ export function* authUnlinkSaga() {
         toUnlink
       });
       yield put(mutations.addMessage({ msg: data.msg, error: false }));
-      yield put(mutations.setState(data));
+      yield put(mutations.setState(data.state));
     } catch (e) {
       yield put(mutations.addMessage({ msg: e.response.data, error: true }));
     }
@@ -99,7 +99,7 @@ export function* sessionFetchSaga() {
 
       // register server side messages, if any
       if (Object.keys(data.message || {}).length > 0) {
-        yield put(mutations.addMessage(data.msg));
+        yield put(mutations.addMessage(data.message));
       }
       context.routerHistory.push("/");
     } catch (e) {

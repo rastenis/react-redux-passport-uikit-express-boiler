@@ -127,6 +127,10 @@ passport.use(
         }
 
         // Twitter linked successfully
+        req.session.message = {
+          msg: "Twitter successfully linked!",
+          error: false
+        };
         return done(null, user);
       }
 
@@ -158,6 +162,10 @@ passport.use(
       }
 
       // created a new account via Twitter
+      req.session.message = {
+        msg: "Created a new account via Twitter!",
+        error: false
+      };
       return done(null, createdUser);
     }
   )
@@ -214,7 +222,6 @@ passport.use(
 
         // save user
         let [linkError, linkedUser] = await to(user.saveUser());
-        console.log(linkedUser);
 
         if (linkError) {
           return done(linkError);
@@ -232,6 +239,10 @@ passport.use(
         }
 
         // Google linked successfully
+        req.session.message = {
+          msg: "Google successfully linked!",
+          error: false
+        };
         return done(null, user);
       }
 
@@ -269,6 +280,10 @@ passport.use(
       }
 
       // created a new account via Google
+      req.session.message = {
+        msg: "Created a new account via Google!",
+        error: false
+      };
       return done(null, new User(createdUser));
     }
   )

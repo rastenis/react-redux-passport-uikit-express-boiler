@@ -115,7 +115,7 @@ app.get("/api/data", (req, res) => {
         };
       })
     },
-    message: req.session.message
+    message: m
   });
 });
 

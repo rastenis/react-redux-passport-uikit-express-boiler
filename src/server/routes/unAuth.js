@@ -63,7 +63,7 @@ router.post("/api/register", check, async (req, res) => {
     if (err.code == 11000) {
       return res.status(500).send("User with given email already exists!");
     } else {
-      console.log(err);
+      console.error(err);
       return res.status(500).send("Server error. Try again later.");
     }
   }
