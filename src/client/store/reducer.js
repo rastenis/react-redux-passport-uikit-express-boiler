@@ -13,6 +13,8 @@ export const reducer = combineReducers({
     switch (type) {
       case mutations.SET_STATE:
         return { ...userData, ...data };
+      case mutations.CLEAR_STATE:
+        return {};
       default:
         return userData;
     }

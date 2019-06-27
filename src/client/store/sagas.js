@@ -22,12 +22,16 @@ export function* authenticationSaga(context) {
       yield put(mutations.processAuth(mutations.AUTHENTICATED));
       yield put(mutations.addMessage({ msg: data.msg, error: false }));
 
+      yield put({
+        type: mutations.REQUEST_SESSION_FETCH
+      });
+
       context.routerHistory.push("/");
     } catch (e) {
-      console.log(e.response.data);
+      console.log(e);
       // TODO: set error message
       yield put(mutations.processAuth(mutations.AUTH_ERROR));
-      yield put(mutations.addMessage({ msg: e.response.data, error: true }));
+      yield put(mutations.addMessage({ msg: e.data, error: true }));
     }
   }
 }
@@ -44,7 +48,7 @@ export function* registrationSaga() {
       yield put(mutations.processAuth(mutations.AUTHENTICATED));
       yield put(mutations.addMessage({ msg: data.msg, error: false }));
 
-      history.push(`/`);
+      context.routerHistory.push("/");
     } catch (e) {
       console.log(e);
       // TODO: set error message
@@ -69,9 +73,10 @@ export function* sessionFetchSaga() {
         console.log("ok");
         yield put(mutations.addMessage(data.message));
       }
-
-      history.push(`/`);
-    } catch (e) {}
+      context.routerHistory.push("/");
+    } catch (e) {
+      // no conncetion to backend
+    }
   }
 }
 
@@ -80,9 +85,10 @@ export function* logoutSaga() {
     yield take(mutations.REQUEST_LOGOUT);
     try {
       yield axios.post(`${url}/api/logout`);
-      yield put(mutations.setState({}));
+      yield put(mutations.clearState());
       yield put(mutations.processAuth(null));
-      history.push(`/`);
+
+      context.routerHistory.push("/");
     } catch (e) {}
   }
 }

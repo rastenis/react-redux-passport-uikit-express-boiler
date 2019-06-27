@@ -5,8 +5,6 @@ import { connect } from "react-redux";
 import * as mutations from "../../store/mutations";
 
 const OnlyUnauthenticated = ({ component: Component, ...rest }) => {
-  console.log(rest);
-
   return (
     <Route
       {...rest}
@@ -23,8 +21,6 @@ const OnlyUnauthenticated = ({ component: Component, ...rest }) => {
 };
 
 const OnlyAuthenticated = ({ component: Component, ...rest }) => {
-  console.log(rest);
-
   return (
     <Route
       {...rest}

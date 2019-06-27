@@ -4,6 +4,7 @@ export const AUTHENTICATING = `AUTHENTICATING`;
 export const AUTHENTICATED = `AUTHENTICATED`;
 export const AUTH_ERROR = `AUTH_ERROR`;
 export const SET_STATE = `SET_STATE`;
+export const CLEAR_STATE = `CLEAR_STATE`;
 export const ADD_MESSAGE = `ADD_MESSAGE`;
 export const REMOVE_MESSAGE = `REMOVE_MESSAGE`;
 export const REQUEST_ACCOUNT_CREATION = `REQUEST_ACCOUNT_CREATION`;
@@ -39,6 +40,10 @@ export const removeMessage = msg => ({
 export const setState = (state = {}) => ({
   type: SET_STATE,
   data: state
+});
+
+export const clearState = () => ({
+  type: CLEAR_STATE
 });
 
 export const requestAccountCreation = (email, password) => ({
