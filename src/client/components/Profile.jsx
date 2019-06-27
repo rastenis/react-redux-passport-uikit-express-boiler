@@ -59,74 +59,76 @@ class Profile extends Component {
           style={{ width: "60%" }}
           className="uk-form-stacked uk-container uk-container-center"
         >
-          {this.props.data.userData.password ? (
-            <div className="uk-margin">
-              <h3>Change Password</h3>
-              <label className="uk-form-label" htmlFor="form-stacked-text">
-                Old Password
-              </label>
-              <div className="uk-form-controls uk-margin-small-bottom">
-                <input
-                  className={`uk-input ${
-                    this.state.errors.find(e => e == "password")
-                      ? "uk-form-danger"
-                      : null
-                  }`}
-                  id="form-stacked-text"
-                  name="oldPassword"
-                  type="password"
-                  placeholder="Old Password"
-                  onChange={this.onChange}
-                  value={this.state.oldPassword}
-                />
+          {Object.keys(this.props.data || {}).length ? (
+            this.props.data.userData.password ? (
+              <div className="uk-margin">
+                <h3>Change Password</h3>
+                <label className="uk-form-label" htmlFor="form-stacked-text">
+                  Old Password
+                </label>
+                <div className="uk-form-controls uk-margin-small-bottom">
+                  <input
+                    className={`uk-input ${
+                      this.state.errors.find(e => e == "password")
+                        ? "uk-form-danger"
+                        : null
+                    }`}
+                    id="form-stacked-text"
+                    name="oldPassword"
+                    type="password"
+                    placeholder="Old Password"
+                    onChange={this.onChange}
+                    value={this.state.oldPassword}
+                  />
+                </div>
+                <label className="uk-form-label" htmlFor="form-stacked-text">
+                  New Password
+                </label>
+                <div className="uk-form-controls uk-margin-small-bottom">
+                  <input
+                    className={`uk-input ${
+                      this.state.errors.find(e => e == "password")
+                        ? "uk-form-danger"
+                        : null
+                    }`}
+                    id="form-stacked-text"
+                    name="newPassword"
+                    type="password"
+                    placeholder="New Password"
+                    onChange={this.onChange}
+                    value={this.state.newPassword}
+                  />
+                </div>
+                <label className="uk-form-label" htmlFor="form-stacked-text">
+                  Confirm New Password
+                </label>
+                <div className="uk-form-controls uk-margin-small-bottom">
+                  <input
+                    className={`uk-input ${
+                      this.state.errors.find(e => e == "password")
+                        ? "uk-form-danger"
+                        : null
+                    }`}
+                    id="form-stacked-text"
+                    name="newPasswordConf"
+                    type="password"
+                    placeholder="Password"
+                    onChange={this.onChange}
+                    value={this.state.newPasswordConf}
+                  />
+                </div>
+                <div className="uk-form-controls uk-margin-small-bottom">
+                  <button
+                    type="button"
+                    className="uk-button uk-button-secondary uk-width-expand"
+                    onClick={this.submitRegistration}
+                  >
+                    Change Password
+                  </button>
+                </div>
+                <hr className=" uk-margin-small-top" />
               </div>
-              <label className="uk-form-label" htmlFor="form-stacked-text">
-                New Password
-              </label>
-              <div className="uk-form-controls uk-margin-small-bottom">
-                <input
-                  className={`uk-input ${
-                    this.state.errors.find(e => e == "password")
-                      ? "uk-form-danger"
-                      : null
-                  }`}
-                  id="form-stacked-text"
-                  name="newPassword"
-                  type="password"
-                  placeholder="New Password"
-                  onChange={this.onChange}
-                  value={this.state.newPassword}
-                />
-              </div>
-              <label className="uk-form-label" htmlFor="form-stacked-text">
-                Confirm New Password
-              </label>
-              <div className="uk-form-controls uk-margin-small-bottom">
-                <input
-                  className={`uk-input ${
-                    this.state.errors.find(e => e == "password")
-                      ? "uk-form-danger"
-                      : null
-                  }`}
-                  id="form-stacked-text"
-                  name="newPasswordConf"
-                  type="password"
-                  placeholder="Password"
-                  onChange={this.onChange}
-                  value={this.state.newPasswordConf}
-                />
-              </div>
-              <div className="uk-form-controls uk-margin-small-bottom">
-                <button
-                  type="button"
-                  className="uk-button uk-button-secondary uk-width-expand"
-                  onClick={this.submitRegistration}
-                >
-                  Change Password
-                </button>
-              </div>
-              <hr className=" uk-margin-small-top" />
-            </div>
+            ) : null
           ) : null}
         </div>
         <div
@@ -134,7 +136,7 @@ class Profile extends Component {
           className="uk-form-stacked uk-container uk-container-center"
         >
           <h3>Linked Accounts</h3>
-          {this.props.data.userData ? (
+          {Object.keys(this.props.data || {}).length > 0 ? (
             this.props.data.userData.google ? (
               <button
                 type="button"
@@ -169,7 +171,7 @@ class Profile extends Component {
             )
           ) : null}
 
-          {this.props.data.userData ? (
+          {Object.keys(this.props.data || {}).length > 0 ? (
             this.props.data.userData.twitter ? (
               <button
                 type="button"
