@@ -58,6 +58,35 @@ export function* registrationSaga() {
   }
 }
 
+export function* passwordChangeSaga() {
+  while (true) {
+    const { newPassword } = yield take(mutations.REQUEST_PASSWORD_CHANGE);
+    try {
+      const { data } = yield axios.post(`${url}/api/changePassword`, {
+        newPassword
+      });
+      yield put(mutations.addMessage({ msg: data.msg, error: false }));
+    } catch (e) {
+      console.log(e);
+      yield put(mutations.addMessage({ msg: e.response.data, error: true }));
+    }
+  }
+}
+export function* authUnlinkSaga() {
+  while (true) {
+    const { name } = yield take(mutations.REQUEST_AUTH_UNLINK);
+    try {
+      const { data } = yield axios.post(`${url}/api/unlink`, {
+        name
+      });
+      yield put(mutations.addMessage({ msg: data.msg, error: false }));
+    } catch (e) {
+      console.log(e);
+      yield put(mutations.addMessage({ msg: e.response.data, error: true }));
+    }
+  }
+}
+
 export function* sessionFetchSaga() {
   while (true) {
     yield take(mutations.REQUEST_SESSION_FETCH);
@@ -70,7 +99,6 @@ export function* sessionFetchSaga() {
 
       // register server side messages, if any
       if (Object.keys(data.message || {}).length > 0) {
-        console.log("ok");
         yield put(mutations.addMessage(data.message));
       }
       context.routerHistory.push("/");
