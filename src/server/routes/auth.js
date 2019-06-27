@@ -40,6 +40,29 @@ router.post("/api/unlink", check, async (req, res) => {
   });
 });
 
+router.post("/api/changePassword", check, async (req, res) => {
+  let user = new User(req.user.data);
+
+  let [e, matched] = await to(user.verifyPassword(req.body.oldPassword));
+
+  if (!matched) {
+    return res.status(500).send("Wrong old password!");
+  }
+
+  user.data.password = req.body.newPassword;
+
+  let [err, savedUser] = await to(user.saveUser());
+
+  if (err) {
+    console.log(err);
+    return res.status(500).send("Server error. Try again later.");
+  }
+
+  // no need to save new hashed password in req.user
+
+  return res.send({ msg: "You have successfully changed your password!" });
+});
+
 // user logout route
 router.post("/api/logout", async (req, res) => {
   let [err] = await to(_promisifiedPassportLogout(req));

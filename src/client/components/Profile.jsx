@@ -22,18 +22,8 @@ class Profile extends Component {
     // clearing previous errors
     this.state.errors = [];
 
-    // invalid password length
-    if (this.state.password.length < 5 || this.state.password.length > 100) {
-      this.props.addMessage({
-        error: true,
-        msg: "Password must be between 5 and a 100 characters!"
-      });
-      this.state.errors.push("password");
-      return;
-    }
-
     // non-matching passwords
-    if (this.state.newPassword != this.state.newPassword) {
+    if (this.state.newPassword != this.state.newPasswordConf) {
       this.props.addMessage({
         error: true,
         msg: "Passwords do not match!"
@@ -42,8 +32,21 @@ class Profile extends Component {
       return;
     }
 
+    // invalid password length
+    if (
+      this.state.newPassword.length < 5 ||
+      this.state.newPassword.length > 100
+    ) {
+      this.props.addMessage({
+        error: true,
+        msg: "Password must be between 5 and a 100 characters!"
+      });
+      this.state.errors.push("password");
+      return;
+    }
+
     // proceeding
-    this.props.changePassword(this.state.newPassword);
+    this.props.changePassword(this.state.oldPassword, this.state.newPassword);
   };
 
   submitUnlinkAuth = e => {
@@ -121,7 +124,7 @@ class Profile extends Component {
                   <button
                     type="button"
                     className="uk-button uk-button-secondary uk-width-expand"
-                    onClick={this.submitRegistration}
+                    onClick={this.submitPasswordChange}
                   >
                     Change Password
                   </button>
@@ -211,8 +214,8 @@ class Profile extends Component {
   }
 }
 
-const changePassword = p => {
-  return mutations.requestPasswordChange(p);
+const changePassword = (o, n) => {
+  return mutations.requestPasswordChange(o, n);
 };
 
 const unlinkAuth = toUnlink => {

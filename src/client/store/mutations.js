@@ -54,8 +54,9 @@ export const requestAccountCreation = (email, password) => ({
   password
 });
 
-export const requestPasswordChange = newPassword => ({
+export const requestPasswordChange = (oldPassword, newPassword) => ({
   type: REQUEST_PASSWORD_CHANGE,
+  oldPassword,
   newPassword
 });
 

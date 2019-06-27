@@ -28,10 +28,9 @@ export function* authenticationSaga(context) {
 
       context.routerHistory.push("/");
     } catch (e) {
-      console.log(e);
       // TODO: set error message
       yield put(mutations.processAuth(mutations.AUTH_ERROR));
-      yield put(mutations.addMessage({ msg: e.data, error: true }));
+      yield put(mutations.addMessage({ msg: e.response.data, error: true }));
     }
   }
 }
@@ -50,7 +49,6 @@ export function* registrationSaga() {
 
       context.routerHistory.push("/");
     } catch (e) {
-      console.log(e);
       // TODO: set error message
       yield put(mutations.processAuth(mutations.AUTH_ERROR));
       yield put(mutations.addMessage({ msg: e.response.data, error: true }));
@@ -60,14 +58,16 @@ export function* registrationSaga() {
 
 export function* passwordChangeSaga() {
   while (true) {
-    const { newPassword } = yield take(mutations.REQUEST_PASSWORD_CHANGE);
+    const { newPassword, oldPassword } = yield take(
+      mutations.REQUEST_PASSWORD_CHANGE
+    );
     try {
       const { data } = yield axios.post(`${url}/api/changePassword`, {
+        oldPassword,
         newPassword
       });
       yield put(mutations.addMessage({ msg: data.msg, error: false }));
     } catch (e) {
-      console.log(e);
       yield put(mutations.addMessage({ msg: e.response.data, error: true }));
     }
   }
@@ -82,7 +82,6 @@ export function* authUnlinkSaga() {
       yield put(mutations.addMessage({ msg: data.msg, error: false }));
       yield put(mutations.setState(data));
     } catch (e) {
-      console.log(e);
       yield put(mutations.addMessage({ msg: e.response.data, error: true }));
     }
   }
@@ -100,7 +99,7 @@ export function* sessionFetchSaga() {
 
       // register server side messages, if any
       if (Object.keys(data.message || {}).length > 0) {
-        yield put(mutations.addMessage(data.message));
+        yield put(mutations.addMessage(data.msg));
       }
       context.routerHistory.push("/");
     } catch (e) {

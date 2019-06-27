@@ -47,10 +47,6 @@ router.post("/api/auth", check, async (req, res) => {
 router.post("/api/register", check, async (req, res) => {
   console.log(`REGISTRATION | requester: ${req.body.email}`);
 
-  if (req.user) {
-    return res.status(500).send("You are signed in!");
-  }
-
   // mirrored validation checks
   if (!/\S+@\S+\.\S+/.test(req.body.email)) {
     return res.status(500).send("Enter a valid email address.");
