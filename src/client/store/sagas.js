@@ -80,7 +80,7 @@ export function* authUnlinkSaga() {
         toUnlink
       });
       yield put(mutations.addMessage({ msg: data.msg, error: false }));
-      yield put(mutations.setState(data.userData));
+      yield put(mutations.setState(data));
     } catch (e) {
       console.log(e);
       yield put(mutations.addMessage({ msg: e.response.data, error: true }));
@@ -116,7 +116,6 @@ export function* logoutSaga() {
       yield axios.post(`${url}/api/logout`);
       yield put(mutations.clearState());
       yield put(mutations.processAuth(null));
-
       context.routerHistory.push("/");
     } catch (e) {}
   }

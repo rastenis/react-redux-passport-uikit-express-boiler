@@ -20,26 +20,18 @@ const check = (req, res, next) => {
 // route to unlink auth accounts
 router.post("/api/unlink", check, async (req, res) => {
   let user = new User(req.user.data);
-  console.log(req.user.data);
 
   user.data.tokens = user.data.tokens.filter(t => {
     return t.kind != req.body.toUnlink;
   });
 
-  delete user.data[req.body.toUnlink];
-
-  console.log("modified", req.user.data);
+  user.data[req.body.toUnlink] = null;
 
   let [err, savedUser] = await to(user.saveUser());
 
   if (err) {
     return res.status(500).send("Internal server error.");
   }
-
-  console.log("saved", savedUser.data, {
-    ...req.user.data,
-    password: req.user.data.password ? true : false
-  });
 
   req.user = savedUser;
 

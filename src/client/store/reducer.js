@@ -8,15 +8,15 @@ let defaultState = {
 };
 
 export const reducer = combineReducers({
-  data(userData = defaultState.data, action) {
+  data(d = defaultState.data, action) {
     let { type, data } = action;
     switch (type) {
       case mutations.SET_STATE:
-        return { ...userData, ...data };
+        return { ...d, ...data };
       case mutations.CLEAR_STATE:
         return {};
       default:
-        return userData;
+        return d;
     }
   },
   auth(userAuth = defaultState.auth, action) {

@@ -47,11 +47,10 @@ class Profile extends Component {
   };
 
   submitUnlinkAuth = e => {
-    this.props.unlinkAuth(e.target.target);
+    this.props.unlinkAuth(e.target.dataset.target);
   };
 
   render() {
-    console.log(this.props.data);
     return (
       <div>
         <h1 className="uk-header-medium uk-text-center">Profile</h1>
@@ -60,126 +59,150 @@ class Profile extends Component {
           style={{ width: "60%" }}
           className="uk-form-stacked uk-container uk-container-center"
         >
-          <div className="uk-margin">
-            <h3>Change Password</h3>
-            <label className="uk-form-label" htmlFor="form-stacked-text">
-              Old Password
-            </label>
-            <div className="uk-form-controls uk-margin-small-bottom">
-              <input
-                className={`uk-input ${
-                  this.state.errors.find(e => e == "password")
-                    ? "uk-form-danger"
-                    : null
-                }`}
-                id="form-stacked-text"
-                name="oldPassword"
-                type="password"
-                placeholder="Old Password"
-                onChange={this.onChange}
-                value={this.state.oldPassword}
-              />
+          {this.props.data.userData.password ? (
+            <div className="uk-margin">
+              <h3>Change Password</h3>
+              <label className="uk-form-label" htmlFor="form-stacked-text">
+                Old Password
+              </label>
+              <div className="uk-form-controls uk-margin-small-bottom">
+                <input
+                  className={`uk-input ${
+                    this.state.errors.find(e => e == "password")
+                      ? "uk-form-danger"
+                      : null
+                  }`}
+                  id="form-stacked-text"
+                  name="oldPassword"
+                  type="password"
+                  placeholder="Old Password"
+                  onChange={this.onChange}
+                  value={this.state.oldPassword}
+                />
+              </div>
+              <label className="uk-form-label" htmlFor="form-stacked-text">
+                New Password
+              </label>
+              <div className="uk-form-controls uk-margin-small-bottom">
+                <input
+                  className={`uk-input ${
+                    this.state.errors.find(e => e == "password")
+                      ? "uk-form-danger"
+                      : null
+                  }`}
+                  id="form-stacked-text"
+                  name="newPassword"
+                  type="password"
+                  placeholder="New Password"
+                  onChange={this.onChange}
+                  value={this.state.newPassword}
+                />
+              </div>
+              <label className="uk-form-label" htmlFor="form-stacked-text">
+                Confirm New Password
+              </label>
+              <div className="uk-form-controls uk-margin-small-bottom">
+                <input
+                  className={`uk-input ${
+                    this.state.errors.find(e => e == "password")
+                      ? "uk-form-danger"
+                      : null
+                  }`}
+                  id="form-stacked-text"
+                  name="newPasswordConf"
+                  type="password"
+                  placeholder="Password"
+                  onChange={this.onChange}
+                  value={this.state.newPasswordConf}
+                />
+              </div>
+              <div className="uk-form-controls uk-margin-small-bottom">
+                <button
+                  type="button"
+                  className="uk-button uk-button-secondary uk-width-expand"
+                  onClick={this.submitRegistration}
+                >
+                  Change Password
+                </button>
+              </div>
+              <hr className=" uk-margin-small-top" />
             </div>
-            <label className="uk-form-label" htmlFor="form-stacked-text">
-              New Password
-            </label>
-            <div className="uk-form-controls uk-margin-small-bottom">
-              <input
-                className={`uk-input ${
-                  this.state.errors.find(e => e == "password")
-                    ? "uk-form-danger"
-                    : null
-                }`}
-                id="form-stacked-text"
-                name="newPassword"
-                type="password"
-                placeholder="New Password"
-                onChange={this.onChange}
-                value={this.state.newPassword}
-              />
-            </div>
-            <label className="uk-form-label" htmlFor="form-stacked-text">
-              Confirm New Password
-            </label>
-            <div className="uk-form-controls uk-margin-small-bottom">
-              <input
-                className={`uk-input ${
-                  this.state.errors.find(e => e == "password")
-                    ? "uk-form-danger"
-                    : null
-                }`}
-                id="form-stacked-text"
-                name="newPasswordConf"
-                type="password"
-                placeholder="Password"
-                onChange={this.onChange}
-                value={this.state.newPasswordConf}
-              />
-            </div>
-            <div className="uk-form-controls uk-margin-small-bottom">
-              <button
-                type="button"
-                className="uk-button uk-button-secondary uk-width-expand"
-                onClick={this.submitRegistration}
-              >
-                Change Password
-              </button>
-            </div>
-          </div>
+          ) : null}
         </div>
         <div
           style={{ width: "60%" }}
           className="uk-form-stacked uk-container uk-container-center"
         >
-          <hr className=" uk-margin-small-top" />
           <h3>Linked Accounts</h3>
-          {this.props.data.userData.google ? (
-            <a
-              type="button"
-              className="uk-button uk-button-danger  uk-width-expand uk-margin-small-bottom"
-              onClick={this.submitUnlinkAuth}
-              target="google"
-            >
-              <span uk-icon="icon: google" className=" uk-margin-small-right" />
-              Unlink Google
-            </a>
-          ) : (
-            <a
-              type="button"
-              className="uk-button uk-button-default uk-width-expand uk-margin-small-bottom"
-              href="/auth/google"
-            >
-              <span uk-icon="icon: google" className=" uk-margin-small-right" />
-              Link Google
-            </a>
-          )}
+          {this.props.data.userData ? (
+            this.props.data.userData.google ? (
+              <button
+                type="button"
+                className="uk-button uk-button-danger  uk-width-expand uk-margin-small-bottom"
+                onClick={this.submitUnlinkAuth}
+                data-target="google"
+                disabled={
+                  !(
+                    this.props.data.userData.tokens.length > 1 ||
+                    this.props.data.userData.password
+                  )
+                }
+              >
+                <span
+                  uk-icon="icon: google"
+                  className=" uk-margin-small-right"
+                />
+                Unlink Google
+              </button>
+            ) : (
+              <a
+                type="button"
+                className="uk-button uk-button-default uk-width-expand uk-margin-small-bottom"
+                href="/auth/google"
+              >
+                <span
+                  uk-icon="icon: google"
+                  className=" uk-margin-small-right"
+                />
+                Link Google
+              </a>
+            )
+          ) : null}
 
-          {this.props.data.userData.twitter ? (
-            <a
-              type="button"
-              className="uk-button uk-button-danger uk-width-expand uk-margin-small-bottom"
-              onClick={this.submitUnlinkAuth}
-              target="twitter"
-            >
-              <span
-                uk-icon="icon: twitter"
-                className=" uk-margin-small-right"
-              />
-              Unlink Twitter
-            </a>
-          ) : (
-            <a
-              type="button"
-              className="uk-button uk-button-default uk-width-expand uk-margin-small-bottom"
-              href="/auth/twitter"
-            >
-              <span
-                uk-icon="icon: twitter"
-                className=" uk-margin-small-right"
-              />
-              Link Twitter
-            </a>
-          )}
+          {this.props.data.userData ? (
+            this.props.data.userData.twitter ? (
+              <button
+                type="button"
+                className="uk-button uk-button-danger uk-width-expand uk-margin-small-bottom"
+                onClick={this.submitUnlinkAuth}
+                data-target="twitter"
+                disabled={
+                  !(
+                    this.props.data.userData.tokens.length > 1 ||
+                    this.props.data.userData.password
+                  )
+                }
+              >
+                <span
+                  uk-icon="icon: twitter"
+                  className=" uk-margin-small-right"
+                />
+                Unlink Twitter
+              </button>
+            ) : (
+              <a
+                type="button"
+                className="uk-button uk-button-default uk-width-expand uk-margin-small-bottom"
+                href="/auth/twitter"
+              >
+                <span
+                  uk-icon="icon: twitter"
+                  className=" uk-margin-small-right"
+                />
+                Link Twitter
+              </a>
+            )
+          ) : null}
         </div>
       </div>
     );

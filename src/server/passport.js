@@ -131,7 +131,7 @@ passport.use(
       }
 
       // create new user
-      const user = new User();
+      let user = new User();
       // Twitter will not provide an email address, so we save the Twitter handle, which is unique,
       // and produce a fake 'email':
       user.data.email = `${profile.username}@twitter.com`;
@@ -199,7 +199,7 @@ passport.use(
 
       if (req.user) {
         // linking Google with existing logged in account
-        user = new User(req.user.data);
+        let user = new User(req.user.data);
         user.data.google = profile.id;
         user.data.tokens.push({
           kind: "google",
@@ -236,7 +236,7 @@ passport.use(
       }
 
       // create new user
-      const user = new User();
+      let user = new User();
       user._meta.noPassword = true;
       user.data.email = profile.emails[0].value;
       user.data.google = profile.id;
