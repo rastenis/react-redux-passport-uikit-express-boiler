@@ -9,8 +9,9 @@ import greenlockStore from "greenlock-store-fs";
 if (config.selfHosted) {
   greenlock
     .create({
-      email: config.email,
-      agreeTos: true,
+      email: config.tls.email,
+      agreeTos: config.tls.tos,
+      approveDomains: config.tls.domains,
       configDir: "~/.config/acme/",
       store: greenlockStore,
       app: app

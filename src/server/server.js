@@ -37,11 +37,10 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure:
-        config.selfHosted == "1" || config.url.includes("https") ? true : false,
+      secure: config.selfHosted || config.url.includes("https") ? true : false,
       // 4 hours cookie expiration when secure, infinite when unsecure.
       maxAge:
-        config.selfHosted == "1" || config.url.includes("https")
+        config.selfHosted || config.url.includes("https")
           ? Date.now() + 60 * 60 * 1000 * 4
           : null,
       domain: config.url.replace(/http:\/\/|https:\/\//g, "")
