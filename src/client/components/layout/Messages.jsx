@@ -1,23 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { ConnectedMessage } from "./Message";
 
 export class Messages extends Component {
-  // not bothering with message removals from state, because messages do not persist refreshes
   render() {
     return (
       <div className="uk-container uk-width-1-2 uk-margin-medium-top">
         {this.props.messages.length
           ? this.props.messages.map((m, index) => {
-              return (
-                <div
-                  key={index}
-                  className={m.error ? "uk-alert-danger" : "uk-alert-primary"}
-                  uk-alert="true"
-                >
-                  <a className="uk-alert-close" uk-close="true" />
-                  <p>{m.msg}</p>
-                </div>
-              );
+              return <ConnectedMessage key={index} message={m} />;
             })
           : null}
       </div>

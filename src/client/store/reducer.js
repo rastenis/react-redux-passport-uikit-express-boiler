@@ -34,8 +34,11 @@ export const reducer = combineReducers({
     let { type, msg } = action;
     switch (type) {
       case mutations.ADD_MESSAGE:
+        msg.id = Math.random()
+          .toString(36)
+          .substring(2, 15);
         return [...messages, msg];
-      case mutations.REMOVE_MESSAGE:
+      case mutations.DELETE_MESSAGE:
         return messages.filter(m => {
           return m.id != msg.id;
         });

@@ -6,7 +6,7 @@ export const AUTH_ERROR = `AUTH_ERROR`;
 export const SET_STATE = `SET_STATE`;
 export const CLEAR_STATE = `CLEAR_STATE`;
 export const ADD_MESSAGE = `ADD_MESSAGE`;
-export const REMOVE_MESSAGE = `REMOVE_MESSAGE`;
+export const DELETE_MESSAGE = `DELETE_MESSAGE`;
 export const REQUEST_ACCOUNT_CREATION = `REQUEST_ACCOUNT_CREATION`;
 export const REQUEST_SESSION_FETCH = `REQUEST_SESSION_FETCH`;
 export const REQUEST_LOGOUT = `REQUEST_LOGOUT`;
@@ -34,8 +34,8 @@ export const addMessage = msg => ({
   msg: msg
 });
 
-export const removeMessage = msg => ({
-  type: REMOVE_MESSAGE,
+export const deleteMessage = msg => ({
+  type: DELETE_MESSAGE,
   msg: msg
 });
 

@@ -1,6 +1,5 @@
 import { take, put } from "redux-saga/effects";
 import axios from "axios";
-import { history } from "./history";
 import * as mutations from "./mutations";
 
 const url = process.env.NODE_ENV == "production" ? "" : `http://localhost:7777`;

@@ -62,3 +62,5 @@ const mapStateToProps = ({ auth, data: { people } }) => ({
 export const ConnectedUserInformation = connect(mapStateToProps)(
   UserInformation
 );
+
+// TODO: proptypes
