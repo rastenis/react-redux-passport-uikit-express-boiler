@@ -16,17 +16,30 @@ console.log(
   chalk.bgBlue.white.bold("Starting setup..." + new Array(33).join(" "))
 );
 
+config.url = prompt(
+  "Enter your website url: (http://example.com): ",
+  config.url
+);
+
+config.mongooseConnectionString = prompt(
+  "Enter your MongoDB connection string: (mongodb://127.0.0.1:27017/boiler): ",
+  config.mongooseConnectionString
+);
+
 config.selfHosted =
   prompt(
-    "Independant TLS? (will require ports 80 and 443) (y/N): "
+    "Use Auto-generated TLS? (will require ports 80 and 443) (y/N): ",
+    "N"
   ).toLowerCase() == "y";
 
 if (config.selfHosted) {
   console.log(chalk.bgBlue.white("Showing additional TLS options:"));
   config.tls.email = prompt("Enter Letsencrypt email (your email): ");
   config.tls.tos =
-    prompt("Do you agree with the LetsEncrypt TOS? (Y/n): ").toLowerCase() ==
-    "y";
+    prompt(
+      "Do you agree with the LetsEncrypt TOS? (Y/n): ",
+      "Y"
+    ).toLowerCase() == "y";
 
   if (!config.tls.tos) {
     config.selfHosted = false;
@@ -45,17 +58,19 @@ if (config.selfHosted) {
       }
     }
   }
-} else {
-  config.port = prompt("Enter port (7777): ", config.port);
+}
+
+if (!config.selfHosted) {
+  config.port = ~~prompt("Enter port (7777): ", config.port);
 }
 
 console.log(chalk.bgBlue.white.bold("Setup done." + new Array(39).join(" ")));
 console.log(chalk.bgBlue.black(new Array(50).join(" ")));
-console.log(chalk.bgBlue.white.bold("Exiting..." + new Array(39).join(" ")));
+console.log(chalk.bgBlue.white.bold("Exiting..." + new Array(40).join(" ")));
 
-config.secret = Math.random()
-  .toString(36)
-  .substring(20);
+config.secret = [...Array(30)]
+  .map(i => (~~(Math.random() * 36)).toString(36))
+  .join("");
 
 // writing and exitting
 fs.writeJsonSync("./config/config.json", config);
