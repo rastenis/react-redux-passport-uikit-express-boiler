@@ -65,9 +65,6 @@ class User {
         let hashed = await this.hashPassword(this.data.password);
         this.data.password = hashed;
 
-        // pre-constructing profile
-        this.data.profile = {};
-
         let [err, inserted] = await to(db.User.create(this.data));
 
         if (err) {

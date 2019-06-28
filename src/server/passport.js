@@ -101,7 +101,9 @@ passport.use(
           accessToken,
           tokenSecret
         });
-        // profile info
+
+        // profile info, without overwriting anything
+        user.data.profile = user.data.profile || {};
         user.data.profile.name = user.data.profile.name || profile.displayName;
         user.data.profile.location =
           user.data.profile.location || profile._json.location;
@@ -146,6 +148,9 @@ passport.use(
         accessToken,
         tokenSecret
       });
+
+      // profile
+      user.data.profile = user.data.profile || {};
       user.data.profile.name = profile.displayName;
       user.data.profile.location = profile._json.location;
       user.data.profile.picture = profile._json.profile_image_url_https;
@@ -214,6 +219,8 @@ passport.use(
           accessToken
         });
 
+        // not overwriting existing profile values
+        user.data.profile = user.data.profile || {};
         user.data.profile.name = user.data.profile.name || profile.displayName;
         user.data.profile.gender =
           user.data.profile.gender || profile._json.gender;
@@ -256,6 +263,8 @@ passport.use(
         accessToken
       });
 
+      // initiating profile if not existent
+      user.data.profile = user.data.profile || {};
       user.data.profile.name = profile.displayName;
       user.data.profile.gender = profile._json.gender;
       user.data.profile.picture = profile._json.picture;
@@ -284,7 +293,7 @@ passport.use(
         msg: "Created a new account via Google!",
         error: false
       };
-      return done(null, new User(createdUser));
+      return done(null, createdUser);
     }
   )
 );

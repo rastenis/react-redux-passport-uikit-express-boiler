@@ -69,7 +69,6 @@ class Login extends Component {
               <a
                 type="button"
                 className="uk-button uk-button-default uk-width-expand uk-margin-small-bottom"
-                onClick={this.submitLogin}
                 href="/auth/google"
               >
                 <span
@@ -82,7 +81,6 @@ class Login extends Component {
               <a
                 type="button"
                 className="uk-button uk-button-default uk-width-expand uk-margin-small-bottom"
-                onClick={this.submitLogin}
                 href="/auth/twitter"
               >
                 <span
