@@ -3,5 +3,11 @@
   "mongooseConnectionString": "mongodb://127.0.0.1:27017/main",
   "saltAmount": 11,
   "secret": "very-secret-phrase",
-  "url": "http://example.com"
+  "url": "http://example.com",
+  "selfHosted": false,
+  "tls": {
+    "tos": false,
+    "email": "example@email.com",
+    "domains": []
+  }
 }

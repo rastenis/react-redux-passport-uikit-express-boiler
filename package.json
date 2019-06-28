@@ -11,7 +11,9 @@
     "dev-server": "nodemon src/server --exec babel-node src/server",
     "dev-client": "webpack-dev-server --port 8081 --host 0.0.0.0",
     "start": "cross-env NODE_ENV=production babel-node src/server",
-    "launch": "npm run build; npm run start"
+    "launch": "npm run build; npm run start",
+    "setup": "node scripts/setup.js",
+    "config": "npm run setup"
   },
   "author": "Scharkee",
   "repository": {
@@ -30,6 +32,7 @@
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "faker": "^4.1.0",
+    "fs-extra": "^8.0.1",
     "greenlock-express": "^2.7.9",
     "greenlock-store-fs": "^3.0.2",
     "helmet": "^3.18.0",
@@ -38,6 +41,7 @@
     "passport-google-oauth": "^2.0.0",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.4",
+    "prompt-sync": "^4.1.7",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "^7.1.0",
