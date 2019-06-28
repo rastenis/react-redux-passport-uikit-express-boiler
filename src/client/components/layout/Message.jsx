@@ -5,19 +5,22 @@ import * as mutations from "../../store/mutations";
 class Message extends Component {
   constructor(...args) {
     super(...args);
+    this.state = {
+      reversed: false
+    };
   }
 
   componentDidMount() {
     setTimeout(() => {
       this.props.deleteMessage(this.props.message);
-    }, 2000);
+    }, 3000);
   }
   render() {
     return (
       <div
-        className={
+        className={`${
           this.props.message.error ? "uk-alert-danger" : "uk-alert-primary"
-        }
+        }`}
         uk-alert="true"
       >
         <a className="uk-alert-close" uk-close="true" />

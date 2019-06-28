@@ -43,6 +43,7 @@
     "passport-twitter": "^1.0.4",
     "prompt-sync": "^4.1.7",
     "react": "^16.8.6",
+    "react-addons-css-transition-group": "^15.6.2",
     "react-dom": "^16.8.6",
     "react-redux": "^7.1.0",
     "react-router": "^5.0.1",
