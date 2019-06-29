@@ -4,7 +4,6 @@
   "description": "A React+Redux boilerplate using Express as backend, UIKit for frontend, MongoDB for storage & Passport for auth.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "echo \"Error: no deployment options yet\" && exit 1",
     "build": "webpack -p",
     "dev": "npm run dev-client & npm run dev-server && fg",
@@ -13,7 +12,10 @@
     "start": "cross-env NODE_ENV=production babel-node src/server",
     "launch": "npm run build; npm run start",
     "setup": "node scripts/setup.js",
-    "config": "npm run setup"
+    "config": "npm run setup",
+    "test": "jest --verbose",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "author": "Scharkee",
   "repository": {
