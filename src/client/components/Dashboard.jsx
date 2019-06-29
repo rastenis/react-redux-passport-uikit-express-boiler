@@ -9,10 +9,14 @@ class Dashboard extends Component {
       <div>
         <h1 className="uk-header-medium uk-text-center">Dashboard</h1>
         <hr className="uk-margin-medium-bottom" />
+
         <ul className="uk-list uk-list-divider">
           {this.props.auth ? ( // waiting for async data
             this.props.auth == mutations.WAITING ? (
-              <p>Loading...</p>
+              <span
+                className="   uk-position-center"
+                data-uk-spinner={"ratio: 3"}
+              />
             ) : this.props.data.people ? ( // listing out people (if data contains people to list)
               this.props.data.people.map((person, index) => {
                 return (
