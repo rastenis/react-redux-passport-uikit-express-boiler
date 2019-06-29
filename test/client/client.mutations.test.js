@@ -1,5 +1,4 @@
 import * as mutations from "../../src/client/store/mutations";
-import { isString } from "util";
 
 // mutation tests
 // tests to make sure mutation creators work properly
