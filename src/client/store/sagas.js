@@ -4,10 +4,10 @@ import * as mutations from "./mutations";
 
 const url = process.env.NODE_ENV == "production" ? "" : `http://localhost:7777`;
 
-axios.interceptors.request.use(request => {
-  console.log("Starting Request", request);
-  return request;
-});
+// axios.interceptors.request.use(request => {
+//   console.log("Starting Request", request);
+//   return request;
+// });
 
 export function* authenticationSaga(context) {
   while (true) {
@@ -115,6 +115,6 @@ export function* logoutSaga() {
       yield put(mutations.clearData()); // removing user data, but keeping messages & auth state
       yield put(mutations.processAuth(null));
       context.routerHistory.push("/");
-    } catch (e) {}
+    } catch (e) { }
   }
 }
