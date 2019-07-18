@@ -115,6 +115,6 @@ export function* logoutSaga() {
       yield put(mutations.clearData()); // removing user data, but keeping messages & auth state
       yield put(mutations.processAuth(null));
       context.routerHistory.push("/");
-    } catch (e) { }
+    } catch (e) {}
   }
 }
