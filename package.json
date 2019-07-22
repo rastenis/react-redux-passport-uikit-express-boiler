@@ -12,6 +12,7 @@
     "start": "cross-env NODE_ENV=production babel-node src/server",
     "launch": "npm run build; npm run start",
     "setup": "node scripts/setup.js",
+    "setup:default": "node scripts/setup.default.js",
     "config": "npm run setup",
     "test": "jest --verbose",
     "test:watch": "jest --watch",
