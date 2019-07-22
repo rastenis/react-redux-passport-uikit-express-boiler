@@ -4,7 +4,6 @@
   "description": "A React+Redux boilerplate using Express as backend, UIKit for frontend, MongoDB for storage & Passport for auth.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "echo \"Error: no deployment options yet\" && exit 1",
     "build": "webpack -p",
     "dev": "npm run dev-client & npm run dev-server && fg",
@@ -13,7 +12,10 @@
     "start": "cross-env NODE_ENV=production babel-node src/server",
     "launch": "npm run build; npm run start",
     "setup": "node scripts/setup.js",
-    "config": "npm run setup"
+    "config": "npm run setup",
+    "test": "jest --verbose",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "author": "Scharkee",
   "repository": {
@@ -22,7 +24,6 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
     "await-to-js": "^2.1.1",
     "axios": "^0.19.0",
     "bcrypt": "^3.0.6",
@@ -32,16 +33,15 @@
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "faker": "^4.1.0",
-    "fs-extra": "^8.0.1",
+    "fs-extra": "^8.1.0",
     "greenlock-express": "^2.7.9",
     "greenlock-store-fs": "^3.0.2",
     "helmet": "^3.18.0",
-    "mongoose": "^5.6.1",
+    "mongoose": "^5.6.2",
     "passport": "^0.4.0",
     "passport-google-oauth": "^2.0.0",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.4",
-    "prompt-sync": "^4.1.7",
     "react": "^16.8.6",
     "react-addons-css-transition-group": "^15.6.2",
     "react-dom": "^16.8.6",
@@ -49,28 +49,41 @@
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
     "redux": "^4.0.1",
-    "redux-devtools-extension": "^2.13.8",
     "redux-logger": "^3.0.6",
-    "redux-saga": "^1.0.3",
+    "redux-saga": "^1.0.4",
     "shortid": "^2.2.14",
-    "uikit": "^3.1.6",
-    "webpack": "^4.35.0"
+    "uikit": "^3.1.6"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.5",
     "@babel/node": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
-    "babel": "^6.23.0",
+    "axios-mock-adapter": "^1.17.0",
+    "babel-jest": "^24.8.0",
     "babel-loader": "^8.0.6",
     "cross-env": "^5.2.0",
     "css-loader": "^3.0.0",
+    "jest": "^24.8.0",
+    "jest-cli": "^24.8.0",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
+    "prompt-sync": "^4.1.7",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-saga-test-plan": "^4.0.0-beta.3",
     "style-loader": "^0.23.1",
     "svg-inline-loader": "^0.8.0",
+    "webpack": "^4.35.0",
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/test/__mocks__/style.js"
+    }
   }
 }

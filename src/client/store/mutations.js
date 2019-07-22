@@ -3,8 +3,8 @@ export const PROCESSING_AUTH = `PROCESSING_AUTH`;
 export const AUTHENTICATING = `AUTHENTICATING`;
 export const AUTHENTICATED = `AUTHENTICATED`;
 export const AUTH_ERROR = `AUTH_ERROR`;
-export const SET_STATE = `SET_STATE`;
-export const CLEAR_STATE = `CLEAR_STATE`;
+export const SET_DATA = `SET_DATA`;
+export const CLEAR_DATA = `CLEAR_DATA`;
 export const ADD_MESSAGE = `ADD_MESSAGE`;
 export const DELETE_MESSAGE = `DELETE_MESSAGE`;
 export const REQUEST_ACCOUNT_CREATION = `REQUEST_ACCOUNT_CREATION`;
@@ -39,13 +39,13 @@ export const deleteMessage = msg => ({
   msg: msg
 });
 
-export const setState = (state = {}) => ({
-  type: SET_STATE,
-  data: state
+export const setData = (data = {}) => ({
+  type: SET_DATA,
+  data
 });
 
-export const clearState = () => ({
-  type: CLEAR_STATE
+export const clearData = () => ({
+  type: CLEAR_DATA
 });
 
 export const requestAccountCreation = (email, password) => ({

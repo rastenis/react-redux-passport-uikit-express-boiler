@@ -8,18 +8,18 @@ let defaultState = {
 };
 
 export const reducer = combineReducers({
-  data(d = defaultState.data, action) {
+  data(d = defaultState.data, action = {}) {
     let { type, data } = action;
     switch (type) {
-      case mutations.SET_STATE:
+      case mutations.SET_DATA:
         return { ...d, ...data };
-      case mutations.CLEAR_STATE:
+      case mutations.CLEAR_DATA:
         return {};
       default:
         return d;
     }
   },
-  auth(userAuth = defaultState.auth, action) {
+  auth(userAuth = defaultState.auth, action = {}) {
     let { type, authenticated } = action;
     switch (type) {
       case mutations.REQUEST_AUTH:
@@ -30,7 +30,7 @@ export const reducer = combineReducers({
         return userAuth;
     }
   },
-  messages(messages = defaultState.messages, action) {
+  messages(messages = defaultState.messages, action = {}) {
     let { type, msg } = action;
     switch (type) {
       case mutations.ADD_MESSAGE:

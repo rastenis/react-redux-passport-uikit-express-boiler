@@ -4,10 +4,10 @@ import * as mutations from "./mutations";
 
 const url = process.env.NODE_ENV == "production" ? "" : `http://localhost:7777`;
 
-axios.interceptors.request.use(request => {
-  console.log("Starting Request", request);
-  return request;
-});
+// axios.interceptors.request.use(request => {
+//   console.log("Starting Request", request);
+//   return request;
+// });
 
 export function* authenticationSaga(context) {
   while (true) {
@@ -17,7 +17,7 @@ export function* authenticationSaga(context) {
         email,
         password
       });
-      yield put(mutations.setState(data.state));
+      yield put(mutations.setData(data.state));
       yield put(mutations.processAuth(mutations.AUTHENTICATED));
       yield put(mutations.addMessage({ msg: data.msg, error: false }));
 
@@ -42,7 +42,7 @@ export function* registrationSaga() {
         email,
         password
       });
-      yield put(mutations.setState(data.state));
+      yield put(mutations.setData(data.state));
       yield put(mutations.processAuth(mutations.AUTHENTICATED));
       yield put(mutations.addMessage({ msg: data.msg, error: false }));
 
@@ -79,7 +79,7 @@ export function* authUnlinkSaga() {
         toUnlink
       });
       yield put(mutations.addMessage({ msg: data.msg, error: false }));
-      yield put(mutations.setState(data.state));
+      yield put(mutations.setData(data.state));
     } catch (e) {
       yield put(mutations.addMessage({ msg: e.response.data, error: true }));
     }
@@ -91,7 +91,7 @@ export function* sessionFetchSaga() {
     yield take(mutations.REQUEST_SESSION_FETCH);
     try {
       const { data } = yield axios.get(`${url}/api/data`);
-      yield put(mutations.setState(data.state));
+      yield put(mutations.setData(data.state));
       yield put(
         mutations.processAuth(data.auth ? mutations.AUTHENTICATED : null)
       );
@@ -112,7 +112,7 @@ export function* logoutSaga() {
     yield take(mutations.REQUEST_LOGOUT);
     try {
       yield axios.post(`${url}/api/logout`);
-      yield put(mutations.clearState());
+      yield put(mutations.clearData()); // removing user data, but keeping messages & auth state
       yield put(mutations.processAuth(null));
       context.routerHistory.push("/");
     } catch (e) {}

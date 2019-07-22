@@ -48,7 +48,7 @@ class Navigation extends Component {
                 </a>
               </li>
             </ul>
-          ) : (
+          ) : this.props.auth == mutations.WAITING ? null : (
             <ul className="uk-navbar-nav">
               <li>
                 <NavLink
