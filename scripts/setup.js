@@ -64,6 +64,29 @@ if (!config.selfHosted) {
   config.port = ~~prompt("Enter port (7777): ", config.port);
 }
 
+if (
+  prompt(
+    "Do you want to learn how to set up Google and Twitter API keys? (Y/n): ",
+    "Y"
+  ).toLowerCase() == "y"
+) {
+  let passportKeys = require("../config/passportKeysExample.json");
+  console.log(chalk.bgBlue.white("Showing additional API KEY information:"));
+  console.log(
+    "Go to https://console.developers.google.com and create a new project. Then, create credentials for 'OAuth client ID'."
+  );
+  passportKeys.GOOGLE_ID = prompt("Paste the Client ID here:");
+  passportKeys.GOOGLE_SECRET = prompt("Paste the Client secret here:");
+  console.log(chalk.bgBlue.white("Great!"));
+  console.log(
+    "Now, go to https://developer.twitter.com/en/apps and create a new twitter app. Navigate to Consumer API keys."
+  );
+  passportKeys.TWITTER_KEY = prompt("Paste the API key here:");
+  passportKeys.TWITTER_SECRET = prompt("Paste the API secret key here:");
+  fs.writeJsonSync("./config/passportKeys.json", passportKeys);
+  console.log("Passport keys configured.");
+}
+
 console.log(chalk.bgBlue.white.bold("Setup done." + new Array(39).join(" ")));
 console.log(chalk.bgBlue.black(new Array(50).join(" ")));
 console.log(chalk.bgBlue.white.bold("Exiting..." + new Array(40).join(" ")));
