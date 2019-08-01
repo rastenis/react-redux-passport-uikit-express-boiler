@@ -37,13 +37,13 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: config.selfHosted || config.url.includes("https") ? true : false,
+      secure: process.env.NODE_ENV== `production` && (config.selfHosted || config.url.includes("https"))? true : false,
       // 4 hours cookie expiration when secure, infinite when unsecure.
       maxAge:
         config.selfHosted || config.url.includes("https")
           ? Date.now() + 60 * 60 * 1000 * 4
           : null,
-      domain: config.url.replace(/http:\/\/|https:\/\//g, "")
+      domain: process.env.NODE_ENV== `production`?config.url.replace(/http:\/\/|https:\/\//g, ""):""
     },
     store: new MongoStore({
       mongooseConnection: mongoose.createConnection(

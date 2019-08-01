@@ -34,7 +34,10 @@ $ cd react-redux-passport-uikit-express-boiler
 $ npm i
 # perform guided setup
 $ npm run setup
-# build the client and launch everything in devmode
+# build the client and launch everything in devmode on port 8081.
+$ npm run dev
+
+# launch in production mode on the port that was chosen when setting up (default 7777)
 $ npm run launch
 
 ```

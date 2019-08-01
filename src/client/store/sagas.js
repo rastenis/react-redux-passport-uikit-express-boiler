@@ -2,8 +2,7 @@ import { take, put } from "redux-saga/effects";
 import axios from "axios";
 import * as mutations from "./mutations";
 
-const url = process.env.NODE_ENV == "production" ? "" : `http://localhost:7777`;
-
+// use this to inspect axios requests
 // axios.interceptors.request.use(request => {
 //   console.log("Starting Request", request);
 //   return request;
@@ -13,7 +12,7 @@ export function* authenticationSaga(context) {
   while (true) {
     const { email, password } = yield take(mutations.REQUEST_AUTH);
     try {
-      const { data } = yield axios.post(`${url}/api/auth`, {
+      const { data } = yield axios.post(`/api/auth`, {
         email,
         password
       });
@@ -34,11 +33,11 @@ export function* authenticationSaga(context) {
   }
 }
 
-export function* registrationSaga() {
+export function* registrationSaga(context) {
   while (true) {
     const { email, password } = yield take(mutations.REQUEST_ACCOUNT_CREATION);
     try {
-      const { data } = yield axios.post(`${url}/api/register`, {
+      const { data } = yield axios.post(`/api/register`, {
         email,
         password
       });
@@ -49,19 +48,20 @@ export function* registrationSaga() {
       context.routerHistory.push("/");
     } catch (e) {
       // TODO: set error message
+      console.log(e);
       yield put(mutations.processAuth(mutations.AUTH_ERROR));
       yield put(mutations.addMessage({ msg: e.response.data, error: true }));
     }
   }
 }
 
-export function* passwordChangeSaga() {
+export function* passwordChangeSaga(context) {
   while (true) {
     const { newPassword, oldPassword } = yield take(
       mutations.REQUEST_PASSWORD_CHANGE
     );
     try {
-      const { data } = yield axios.post(`${url}/api/changePassword`, {
+      const { data } = yield axios.post(`/api/changePassword`, {
         oldPassword,
         newPassword
       });
@@ -71,11 +71,11 @@ export function* passwordChangeSaga() {
     }
   }
 }
-export function* authUnlinkSaga() {
+export function* authUnlinkSaga(context) {
   while (true) {
     const { toUnlink } = yield take(mutations.REQUEST_AUTH_UNLINK);
     try {
-      const { data } = yield axios.post(`${url}/api/unlink`, {
+      const { data } = yield axios.post(`/api/unlink`, {
         toUnlink
       });
       yield put(mutations.addMessage({ msg: data.msg, error: false }));
@@ -86,11 +86,11 @@ export function* authUnlinkSaga() {
   }
 }
 
-export function* sessionFetchSaga() {
+export function* sessionFetchSaga(context) {
   while (true) {
     yield take(mutations.REQUEST_SESSION_FETCH);
     try {
-      const { data } = yield axios.get(`${url}/api/data`);
+      const { data } = yield axios.get(`/api/data`);
       yield put(mutations.setData(data.state));
       yield put(
         mutations.processAuth(data.auth ? mutations.AUTHENTICATED : null)
@@ -107,11 +107,11 @@ export function* sessionFetchSaga() {
   }
 }
 
-export function* logoutSaga() {
+export function* logoutSaga(context) {
   while (true) {
     yield take(mutations.REQUEST_LOGOUT);
     try {
-      yield axios.post(`${url}/api/logout`);
+      yield axios.post(`/api/logout`);
       yield put(mutations.clearData()); // removing user data, but keeping messages & auth state
       yield put(mutations.processAuth(null));
       context.routerHistory.push("/");

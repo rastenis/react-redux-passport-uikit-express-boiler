@@ -61,7 +61,11 @@ if (config.selfHosted) {
 }
 
 if (!config.selfHosted) {
-  config.port = ~~prompt("Enter port (7777): ", config.port);
+  console.log("NOTE:");
+  console.log("NOTE: dev mode (npm run dev) is accessed via a separate port that will be displayed when it is launched.");
+  console.log("NOTE: in production (npm run launch), access the server directly via the server port. ");
+  console.log("NOTE:");
+  config.port = ~~prompt("Enter production/server port (7777): ", config.port);
 }
 
 if (
