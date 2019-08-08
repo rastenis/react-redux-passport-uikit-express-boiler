@@ -5,6 +5,7 @@ const fs = require("fs-extra");
 
 // base values
 let config = require("../config/configExample.json");
+let passportKeys = require("../config/passportKeysExample.json");
 
 console.log(
   chalk.bgBlue.white.bold(
@@ -62,8 +63,12 @@ if (config.selfHosted) {
 
 if (!config.selfHosted) {
   console.log("NOTE:");
-  console.log("NOTE: dev mode (npm run dev) is accessed via a separate port that will be displayed when it is launched.");
-  console.log("NOTE: in production (npm run launch), access the server directly via the server port. ");
+  console.log(
+    "NOTE: dev mode (npm run dev) is accessed via a separate port that will be displayed when it is launched."
+  );
+  console.log(
+    "NOTE: in production (npm run launch), access the server directly via the server port. "
+  );
   console.log("NOTE:");
   config.port = ~~prompt("Enter production/server port (7777): ", config.port);
 }
@@ -74,7 +79,6 @@ if (
     "Y"
   ).toLowerCase() == "y"
 ) {
-  let passportKeys = require("../config/passportKeysExample.json");
   console.log(chalk.bgBlue.white("Showing additional API KEY information:"));
   console.log(
     "Go to https://console.developers.google.com and create a new project. Then, create credentials for 'OAuth client ID'."
@@ -87,7 +91,6 @@ if (
   );
   passportKeys.TWITTER_KEY = prompt("Paste the API key here:");
   passportKeys.TWITTER_SECRET = prompt("Paste the API secret key here:");
-  fs.writeJsonSync("./config/passportKeys.json", passportKeys);
   console.log("Passport keys configured.");
 }
 
@@ -98,6 +101,9 @@ console.log(chalk.bgBlue.white.bold("Exiting..." + new Array(40).join(" ")));
 config.secret = [...Array(30)]
   .map(i => (~~(Math.random() * 36)).toString(36))
   .join("");
+
+// key setup will be either done, or ignored, either way, saving set values/defaults
+fs.writeJsonSync("./config/passportKeys.json", passportKeys);
 
 // writing and exitting
 fs.writeJsonSync("./config/config.json", config);
