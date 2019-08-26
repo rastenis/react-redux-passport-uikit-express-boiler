@@ -4,6 +4,8 @@
 
 A React+Redux boilerplate using Express as backend, UIKit for frontend, MongoDB for storage & Passport for auth.
 
+[Demo website.](https://reactredux.demos.matasr.com)
+
 ## Features
 
 - Webpack+Babel for the client, babel-node for the server
