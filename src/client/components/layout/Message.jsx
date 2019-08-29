@@ -6,15 +6,22 @@ class Message extends Component {
   constructor(...args) {
     super(...args);
     this.state = {
-      reversed: false
+      closer: null
     };
   }
 
   componentDidMount() {
-    setTimeout(() => {
-      this.props.deleteMessage(this.props.message);
-    }, 3000);
+    this.setState({
+      closer: setTimeout(() => {
+        this.props.deleteMessage(this.props.message);
+      }, 3000)
+    });
   }
+
+  setCancelled = () => {
+    clearTimeout(this.state.closer);
+  };
+
   render() {
     return (
       <div
@@ -23,7 +30,11 @@ class Message extends Component {
         }`}
         uk-alert="true"
       >
-        <a className="uk-alert-close" uk-close="true" />
+        <a
+          className="uk-alert-close"
+          uk-close="true"
+          onClick={this.setCancelled}
+        />
         <p>{this.props.message.msg}</p>
       </div>
     );
