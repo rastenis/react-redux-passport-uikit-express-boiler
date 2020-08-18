@@ -5,7 +5,7 @@ import passport from "passport";
 import {
   _promisifiedPassportAuthentication,
   _promisifiedPassportLogin,
-  _promisifiedPassportLogout
+  _promisifiedPassportLogout,
 } from "./passport.js";
 import path from "path";
 import bodyParser from "body-parser";
@@ -37,19 +37,30 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV== `production` && (config.selfHosted || config.url.includes("https"))? true : false,
+      secure:
+        process.env.NODE_ENV == `production` &&
+        (config.selfHosted || config.url.includes("https"))
+          ? true
+          : false,
       // 4 hours cookie expiration when secure, infinite when unsecure.
       maxAge:
         config.selfHosted || config.url.includes("https")
           ? Date.now() + 60 * 60 * 1000 * 4
           : null,
-      domain: process.env.NODE_ENV== `production`?config.url.replace(/http:\/\/|https:\/\//g, ""):""
+      domain:
+        process.env.NODE_ENV == `production`
+          ? config.url.replace(/http:\/\/|https:\/\//g, "")
+          : "",
     },
     store: new MongoStore({
       mongooseConnection: mongoose.createConnection(
-        config.mongooseConnectionString
-      )
-    })
+        config.mongooseConnectionString,
+        {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        }
+      ),
+    }),
   })
 );
 
@@ -65,13 +76,13 @@ app.use("/", onlyAuth);
 app.get(
   "/auth/google",
   passport.authenticate("google", {
-    scope: "profile email"
+    scope: "profile email",
   })
 );
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "/login"
+    failureRedirect: "/login",
   }),
   (req, res) => {
     res.redirect(req.session.returnTo || "/");
@@ -81,7 +92,7 @@ app.get("/auth/twitter", passport.authenticate("twitter"));
 app.get(
   "/auth/twitter/callback",
   passport.authenticate("twitter", {
-    failureRedirect: "/login"
+    failureRedirect: "/login",
   }),
   (req, res) => {
     res.redirect(req.session.returnTo || "/");
@@ -108,11 +119,11 @@ app.get("/api/data", (req, res) => {
         return {
           name: faker.name.findName(),
           email: faker.internet.email(),
-          contact: faker.helpers.createCard()
+          contact: faker.helpers.createCard(),
         };
-      })
+      }),
     },
-    message: m
+    message: m,
   });
 });
 

@@ -4,21 +4,25 @@ import config from "../../config/config.json";
 const userSchema = new mongoose.Schema({
   email: {
     unique: true,
-    type: String
+    type: String,
   },
   password: String,
   tokens: [],
   profile: {},
   google: String,
-  twitter: String
+  twitter: String,
 });
 
 const User = mongoose.model("User", userSchema, "users");
 
-mongoose.connect(config.mongooseConnectionString, { useNewUrlParser: true });
+mongoose.connect(config.mongooseConnectionString, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+});
 
 const db = {
-  User: User
+  User: User,
 };
 
 export default db;
