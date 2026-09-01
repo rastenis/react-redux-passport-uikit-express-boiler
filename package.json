@@ -38,7 +38,7 @@
     "greenlock-express": "^2.7.11",
     "greenlock-store-fs": "^3.0.2",
     "helmet": "^3.19.0",
-    "mongoose": "^5.6.5",
+    "mongoose": "^5.7.5",
     "passport": "^0.4.0",
     "passport-google-oauth": "^2.0.0",
     "passport-local": "^1.0.0",
